@@ -22,8 +22,11 @@
 
 #![warn(missing_docs)]
 
-/// Re-export easing functions from easer.
-pub use easer::functions as easing;
+/// Re-export kinetocore engine.
+pub use kinetocore as core;
+
+/// Re-export easing functions from kinetocore.
+pub use kinetocore::easing;
 
 /// Early scaffold version of kinetoxus.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -39,7 +42,7 @@ mod tests {
 
     #[test]
     fn test_easing_reexport() {
-        use easer::functions::Easing;
+        use kinetocore::easing::Easing;
         let v = easing::Quad::ease_in_out(0.5f32, 0.0, 100.0, 1.0);
         assert!((v - 50.0).abs() < 1e-4);
     }

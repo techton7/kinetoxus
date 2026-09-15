@@ -12,7 +12,7 @@ categories = ["gui", "visualization", "multimedia"]
 
 [dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
-easer = "0.3.0"
+kinetocore = { version = "0.1.0", path = "../kinetocore" }
 
 [dev-dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["minimal"] }
