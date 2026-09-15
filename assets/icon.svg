@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- 
+      앞선 원의 외부원 전체(r=100)로 도려내어
+      뒷 원이 앞 원 밑으로 비쳐 보이지 않도록 완벽히 차단
+    -->
+    <mask id="solid-clip-3" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect x="0" y="0" width="512" height="512" fill="white" />
+      <circle cx="385" cy="211" r="100" fill="black" />
+    </mask>
+
+    <mask id="solid-clip-2" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect x="0" y="0" width="512" height="512" fill="white" />
+      <circle cx="299" cy="241" r="100" fill="black" />
+    </mask>
+
+    <mask id="solid-clip-1" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect x="0" y="0" width="512" height="512" fill="white" />
+      <circle cx="213" cy="271" r="100" fill="black" />
+    </mask>
+  </defs>
+
+  <!-- 
+    ================================================================
+    4-FRAME SOLID KINETIC TWEEN
+    - 지름 200px (반지름 r=100)의 완전히 채워진 솔리드 원
+    - 1번: 30% Opacity Blue
+    - 2번: 55% Opacity Blue
+    - 3번: 80% Opacity Orange
+    - 4번: 100% Solid Orange
+    ================================================================
+  -->
+  <g stroke="none">
+    <!-- [FRAME 1] Start (30% Blue 초승달 잔상) -->
+    <circle cx="127" cy="301" r="100" 
+            fill="#00A8E8" 
+            opacity="0.30" 
+            mask="url(#solid-clip-1)" />
+
+    <!-- [FRAME 2] Acceleration (55% Blue 초승달 잔상) -->
+    <circle cx="213" cy="271" r="100" 
+            fill="#00A8E8" 
+            opacity="0.55" 
+            mask="url(#solid-clip-2)" />
+
+    <!-- [FRAME 3] Deceleration (80% Orange 초승달 잔상) -->
+    <circle cx="299" cy="241" r="100" 
+            fill="#ED5B2A" 
+            opacity="0.80" 
+            mask="url(#solid-clip-3)" />
+
+    <!-- [FRAME 4] Final Target (100% Solid Orange 완벽한 원) -->
+    <circle cx="385" cy="211" r="100" 
+            fill="#ED5B2A" />
+  </g>
+</svg>

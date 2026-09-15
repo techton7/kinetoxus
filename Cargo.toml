@@ -1,0 +1,18 @@
+[package]
+name = "kinetoxus"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/techton7/kinetoxus"
+authors = ["Techton <contact@techton.io>"]
+description = "Pure Rust, high-performance physics & timeline motion platform for Dioxus (DOM & WGPU)."
+readme = "README.md"
+keywords = ["dioxus", "animation", "motion", "physics", "timeline"]
+categories = ["gui", "visualization", "multimedia"]
+
+[dependencies]
+dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
+easer = "0.3.0"
+
+[dev-dependencies]
+dioxus = { version = "0.7.0", default-features = false, features = ["minimal"] }
