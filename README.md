@@ -16,9 +16,10 @@
 
 ---
 
-**Kinetoxus** is a 100% pure Rust motion engine and multi-track timeline orchestrator purpose-built for the [Dioxus](https://dioxuslabs.com) ecosystem.
+**Kinetoxus** is a 100% pure Rust motion facade and multi-target animation platform purpose-built for the [Dioxus](https://dioxuslabs.com) ecosystem.
+Operating on top of [`kinetocore`](https://github.com/techton7/kinetocore), it presents a single, ergonomic motion vocabulary (`set`, `from_to`, `animate`) tailored for Dioxus components, reactive signals, and interactive UI lifecycles.
 
-Built with **zero JavaScript dependencies**, it operates with nanosecond numerical interpolation precision across both native Blitz desktop and Web (WASM) environments.
+Built with **zero JavaScript dependencies**, it runs with high-resolution frame timing across both Web (WASM `requestAnimationFrame`) and native/headless environments.
 
 ## 🧬 Brand & Etymology
 
@@ -27,78 +28,59 @@ Built with **zero JavaScript dependencies**, it operates with nanosecond numeric
 
 ---
 
-## 🗺️ Ecosystem Synergy Map
-
-```text
-                     ┌─────────────────────────────────────────┐
-                     │   kinetoxus (Timeline & Motion Engine)  │
-                     └────────────────────┬────────────────────┘
-                                          │ (Nanosecond Numerical Interpolation)
-       ┌──────────────────────────────────┼──────────────────────────────────┐
-       ▼                                  ▼                                  ▼
-[shadcn-dioxus / monoxus]            [nodoxus (Node Engine)]         [trioxus (WGPU Viewport)]
-- Fluid modal & drawer springs        - Sugiyama layout sliding       - 3D camera flight & orbits
-- Accordion & tab transitions        - Edge neon pulse flows         - Exploded assembly sequences
-- Scroll & gesture tracking           - Viewport FitView gliding      - Lighting, materials, opacity
-```
-
----
-
 ## ⚡ Core Architectural Pillars
 
 ### 1. 100% Pure Rust Clean-Room Architecture
-- **Zero JS Dependencies**: Completely free of browser runtime dependencies, Webflow/GSAP licensing constraints, or FFI overhead.
-- **Universal Multi-Platform**: Runs with identical performance on Blitz native desktop (via Metal, Vulkan, DirectX) and Web (via WebGPU / WASM).
+- **Zero JS Dependencies**: Free of browser runtime animation frameworks, Webflow/GSAP licensing constraints, or JavaScript evaluation overhead.
+- **Universal Multi-Platform**: Runs on Web (WASM via high-resolution RAF) and native desktop (deterministic manual stepping for tests, headless, and future native drivers).
 
-### 2. Multi-Target Motion Pipeline (DOM vs WGPU)
-```text
-[ kinetoxus Timeline & Motion Sequencer ]
-                   │ (Time t Easing & Spring Physics Calculation)
-         ┌─────────┴─────────┐
-         ▼                   ▼
-[ Target A: Dioxus RSX DOM ] [ Target B: WGPU Graphic Primitives ]
-- HTML / Blitz CSS styles     - nodoxus: Node coordinates (f32, f32), edge dash offsets
-- transform, opacity, width   - trioxus: 3D camera [f32; 3], PBR mesh rotation
-```
-- **Target A (DOM / Signal)**: Real-time updates to Dioxus reactive signals and component styles.
-- **Target B (WGPU Direct Gliding)**: Directly mutates numeric arrays (`[f32; N]`) to write directly to GPU buffers (`queue.write_buffer`) with **zero VDOM diffing overhead**, keeping UI components dormant while the GPU renders at 120fps.
+### 2. Dioxus Reactive Ergonomics (`SignalTarget<T>`)
+- **`use_motion()` Hook**: Component-scoped motion owner with automatic unmount cancellation and memory leak prevention via `use_drop`.
+- **`SignalTarget<T>`**: Zero-overhead adapter bridging `Tween<T>` interpolation directly to Dioxus reactive signals (`Signal<T>`).
+- **Deterministic Overwrite**: Automatically detects target collisions and cancels prior active animations on the same signal when a new animation is scheduled.
 
-### 3. Dual Mathematics Engine
-- **Robert Penner Easing Formulas** (via [`easer`]): Time-tested mathematical ease-in, ease-out, bounce, and elastic curves.
-- **Damped Harmonic Oscillator** (Spring Physics): Velocity-based physics that naturally handles gesture interrupts, flicks, and velocity preservation without snapping.
-
-### 4. Blender-Style Timeline Control
-- `.seek(seconds: f64)`: Instant jump to a timestamp.
-- `.progress(ratio: f64)`: 0.0 to 1.0 ratio scrubbing (ideal for slider/scrollbar sync).
-- `.reverse()`, `.time_scale(rate: f64)`: Smooth backward playback and speed scaling.
-- `use_timeline_scrubber`: Two-way synchronization with Dioxus reactive signals.
+### 3. Dual Frame Driver Architecture
+- **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driver with automatic idle sleep when all animations complete.
+- **Non-WASM / Desktop**: Deterministic manual driver via `Motion::tick(dt)` for unit testing and custom tick loops. Real native display-link drivers are explicitly planned for future milestones.
 
 ---
 
-## 💻 Code Preview (Target Ergonomics)
+## 💻 Code Preview (Phase-1 Signal MVP)
 
 ```rust
+use std::time::Duration;
 use dioxus::prelude::*;
 use kinetoxus::prelude::*;
 
 #[component]
-pub fn AnimatedScene() -> Element {
-    let mut timeline = use_timeline();
+pub fn AnimatedButton() -> Element {
+    let scale = use_signal(|| 1.0f32);
+    let opacity = use_signal(|| 1.0f32);
+    let motion = use_motion();
 
-    let on_start = move |_| {
-        timeline.new_sequence()
-            // Animate WGPU camera coordinates directly
-            .to(&mut camera_pos, [0.0, 5.0, 10.0], Duration::from_secs_f32(1.5))
-            .ease(Ease::ElasticOut)
-            .stagger(Duration::from_millis(50))
-            .on_update(move || {
-                trioxus_ctx.request_render();
-            })
-            .play();
-    };
+    let m1 = motion.clone();
+    let m2 = motion;
 
     rsx! {
-        button { onclick: on_start, "Play Cinematic Flight" }
+        div {
+            style: "transform: scale({scale}); opacity: {opacity};",
+            button {
+                onclick: move |_| {
+                    // Smooth bounce scale over 400ms
+                    m1.from_to(scale, 0.7f32, 1.0f32, Duration::from_millis(400))
+                        .ease(Ease::BounceOut);
+                },
+                "Bounce"
+            }
+            button {
+                onclick: move |_| {
+                    // Immediate value reset
+                    m2.set(scale, 1.0f32);
+                    m2.set(opacity, 1.0f32);
+                },
+                "Reset"
+            }
+        }
     }
 }
 ```
@@ -108,10 +90,10 @@ pub fn AnimatedScene() -> Element {
 ## 🗺️ Development Milestones
 
 - [x] **Project Initialization**: Repository scaffold, dual MIT/Apache-2.0 licenses, Release-plz CI setup.
-- [ ] **M1 (Math & Interpolation Core)**: Penner easing integration and spring physics numerical interpolators.
-- [ ] **M2 (Tween & Timeline Engine)**: Time-based track sequencer, `play()`, `reverse()`, and `seek()` controls.
-- [ ] **M3 (Dioxus Signal & DOM Binding)**: `use_timeline()` hook for Dioxus components and reactive signals.
-- [ ] **M4 (WGPU Direct Buffer Binding)**: Zero-copy direct buffer updating adapter for `trioxus` and `nodoxus`.
+- [x] **Phase-1 (Dioxus Signal MVP)**: `use_motion()`, `motion.set()`, `motion.from_to()`, `SignalTarget<T>`, and Web RAF driver.
+- [ ] **Phase-2 (Current-Value Tweens)**: `to()`, `from()`, dynamic start-value sampling, and granular overwrite policies.
+- [ ] **Phase-3 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
+- [ ] **Phase-4 (Non-Signal Target Adapters)**: `HandleTarget<T>` and direct buffer-writing adapters for `trioxus` (WGPU 3D) and `nodoxus` (2D node graph).
 
 ---
 

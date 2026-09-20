@@ -4,31 +4,43 @@
 //!
 //! ## Overview
 //!
-//! `kinetoxus` is a 100% pure Rust motion engine and multi-track timeline orchestrator designed for Dioxus.
-//! Built with zero JavaScript dependencies, it operates with nanosecond numerical interpolation precision
-//! across both native Blitz desktop and Web (WASM) environments.
+//! `kinetoxus` is the Dioxus-facing motion facade built on top of [`kinetocore`].
+//! It delivers an ergonomic motion vocabulary (`set`, `from_to`, `animate`) tailored for
+//! Dioxus components, reactive signals ([`SignalTarget`]), and interactive UI lifecycles.
 //!
-//! ### Key Pillars
+//! ### Core Features (Phase-1 Signal MVP)
 //!
-//! - **Multi-Target Motion Pipeline**:
-//!   - **Target A (DOM / Signal)**: Fluidly updates Dioxus reactive signals and component CSS styles.
-//!   - **Target B (WGPU Graphic Primitives)**: Directly mutates numeric arrays (`[f32; N]`) to update
-//!     WGPU uniform and instance buffers (`queue.write_buffer`) with zero VDOM diffing overhead.
-//! - **Dual Mathematics Engine**:
-//!   - Industry-standard **Robert Penner Easing** formulas via [`easer`].
-//!   - Velocity-based **Damped Harmonic Oscillator** (Spring Physics) for natural, interruptible UI gestures.
-//! - **Multi-Track Timeline**: First-class scrubbing (`seek`, `progress`, `reverse`, `time_scale`) across
-//!   DOM components, 2D node graphs ([`nodoxus`]), and 3D scenes ([`trioxus`]).
+//! - **[`use_motion()`]**: Component-scoped motion hook with automatic unmount cancellation.
+//! - **[`Motion`]**: Motion controller supporting immediate `set()` and time-based `from_to()`.
+//! - **[`SignalTarget`]**: Zero-overhead adapter bridging tweens to reactive Dioxus [`dioxus::prelude::Signal`].
+//! - **Dual Driver Architecture**:
+//!   - **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driver with automatic idle sleep.
+//!   - **Non-WASM / Desktop**: Deterministic, manual frame driver via [`Motion::tick`] for testing and custom tick loops.
+//! - **Full [`kinetocore`] Integration**: Seamless access to 31 Robert Penner [`Ease`] curves, repeats, yoyo, and direction control.
 
 #![warn(missing_docs)]
 
-/// Re-export kinetocore engine.
+pub mod driver;
+pub mod hooks;
+pub mod motion;
+pub mod prelude;
+pub mod target;
+
+// Re-export primary public types at crate root
+pub use driver::DriverKind;
+pub use hooks::use_motion;
+pub use motion::{Motion, MotionHandle};
+pub use target::SignalTarget;
+
+// Re-export kinetocore engine and easing for convenience
 pub use kinetocore as core;
-
-/// Re-export easing functions from kinetocore.
+pub use kinetocore::ease::Ease;
 pub use kinetocore::easing;
+pub use kinetocore::interpolate::{lerp, Interpolate};
+pub use kinetocore::repeat::{RepeatCount, RepeatStrategy};
+pub use kinetocore::tween::Tween;
 
-/// Early scaffold version of kinetoxus.
+/// Current package version of kinetoxus.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[cfg(test)]
