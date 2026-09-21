@@ -13,9 +13,9 @@
 //! - **[`use_motion()`]**: Component-scoped motion hook with automatic unmount cancellation.
 //! - **[`Motion`]**: Motion controller supporting immediate `set()` and time-based `from_to()`.
 //! - **[`SignalTarget`]**: Zero-overhead adapter bridging tweens to reactive Dioxus [`dioxus::prelude::Signal`].
-//! - **Dual Driver Architecture**:
-//!   - **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driver with automatic idle sleep.
-//!   - **Non-WASM / Desktop**: Deterministic, manual frame driver via [`Motion::tick`] for testing and custom tick loops.
+//! - **Shared Frame Ownership via [`oxidase`]**:
+//!   - **Web (`wasm32`)**: Hosted `requestAnimationFrame` via `oxidase::frame`.
+//!   - **Non-WASM / Desktop**: Deterministic manual/headless ticking via [`Motion::tick`] and `oxidase::frame::tick(dt)`.
 //! - **Full [`kinetocore`] Integration**: Seamless access to 31 Robert Penner [`Ease`] curves, repeats, yoyo, and direction control.
 
 #![warn(missing_docs)]

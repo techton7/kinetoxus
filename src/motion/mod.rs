@@ -11,6 +11,8 @@ use std::time::Duration;
 
 use kinetocore::interpolate::Interpolate;
 use kinetocore::tween::Tween;
+#[cfg(not(target_arch = "wasm32"))]
+use oxidase::frame::tick as tick_shared_frame;
 
 use crate::driver::{Driver, DriverKind};
 use crate::motion::animation::{ActiveAnimation, SignalAnimation};
@@ -238,10 +240,21 @@ impl Motion {
     /// Returns `true` if there are still active animations remaining.
     ///
     /// In non-WASM / headless environments or unit tests, this is the primary
-    /// mechanism for advancing animations forward in time. On Web (WASM), animations
-    /// are automatically advanced by the `requestAnimationFrame` driver.
+    /// mechanism for advancing animations forward in time through the shared
+    /// `oxidase::frame::tick(dt)` manual/headless frame registry. On Web (WASM),
+    /// animations are automatically advanced by the hosted frame loop.
     pub fn tick(&self, dt: Duration) -> bool {
+        #[cfg(target_arch = "wasm32")]
         let has_more = self.inner.borrow_mut().tick(dt);
+
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            tick_shared_frame(dt);
+        }
+
+        #[cfg(not(target_arch = "wasm32"))]
+        let has_more = self.inner.borrow().active_count() > 0;
+
         if !has_more {
             self.driver.stop();
         }

@@ -2,7 +2,20 @@
 
 This document is the working roadmap for `kinetoxus`.
 
-The repository is currently a scaffold with minimal implementation. This roadmap defines the agreed direction for the crate and should be treated as the live architecture guide until the rest of the repository is updated to match it.
+The crate is now beyond pure scaffolding: the first `kinetocore` value core is in place, the first Dioxus `SignalTarget` MVP exists, and shared frame ownership has begun moving into `oxidase`. This roadmap remains the live architecture guide for what is already complete, what is actively dogfooded, and what is still deferred.
+
+## Current Reality Snapshot
+
+As of the current dogfooding lane:
+
+1. `kinetocore` Phase-1 value core exists and is consumed by `kinetoxus`.
+2. `kinetoxus` already has:
+   - `use_motion()`
+   - `Motion`
+   - `SignalTarget<T>`
+   - `set`
+   - `from_to`
+3. Shared frame ownership now routes through `oxidase::frame`, while hosted native maturity remains an actively evolving lane rather than a fully settled public contract.
 
 ## Mission
 
@@ -142,10 +155,10 @@ In practice, that means:
 
 | Phase | Goal | Deliverables | Proof target |
 |---|---|---|---|
-| 0 | Direction reset | Align docs and crate positioning around pure Rust motion and dual target support | `[contract-implemented]` |
-| 1 | Thin facade over `kinetocore` | Reuse core interpolation and tween semantics instead of duplicating math in `kinetoxus` | `[contract-implemented]` |
-| 2 | Frame driver and lifecycle | Web RAF driver, cleanup on unmount, and a stable per-component motion owner | `[contract-implemented]` |
-| 3 | Signal-based MVP | `set`, `from`, `to`, `from_to` for `SignalTarget<T>` with Dioxus hooks | `[runtime-proven]` in a small app |
+| 0 | Direction reset | Align docs and crate positioning around pure Rust motion and dual target support | `[completed]` |
+| 1 | Thin facade over `kinetocore` | Reuse core interpolation and tween semantics instead of duplicating math in `kinetoxus` | `[completed]` |
+| 2 | Frame driver and lifecycle | Shared frame integration through `oxidase::frame`, cleanup on unmount, and a stable per-component motion owner | `[completed]` |
+| 3 | Signal-based MVP | `use_motion()`, `SignalTarget<T>`, `set`, `from_to`, and first real Dioxus consumer surface | `[completed]` |
 | 4 | Timeline and spring hooks | `use_timeline`, `use_spring`, interruptible playback, reverse, seek, and completion hooks | `[runtime-proven]` |
 | 5 | Dogfood in `monoxus` | Real transitions on one or more playground surfaces to prove ergonomics | `[runtime-proven]` |
 | 6 | Non-signal target support | `HandleTarget<T>` and related adapters for renderer-owned values | `[contract-implemented]` + `[runtime-proven]` |
@@ -169,24 +182,29 @@ In practice, that means:
 - Consume `kinetocore` primitives and expose Dioxus-oriented ergonomics on top.
 - Keep the shared contract obvious enough that future target adapters compose cleanly.
 
+**Status:** complete for the first value-core consumer slice.
+
 ### Phase 2 - Frame Driver and Lifecycle
 
-- Add a motion owner that lives safely inside a Dioxus component lifecycle.
-- Start with a Web-first requestAnimationFrame driver.
-- Define the native path without pretending it is already solved if it is not.
+- Motion ownership is now tied to the component lifecycle and shared frame-driving has begun moving into `oxidase::frame`.
+- Web hosted timing is real.
+- Manual/headless timing is real.
+- Hosted native timing remains a separate maturity track and should continue to be described honestly.
+
+**Status:** complete for the first shared-frame migration slice.
 
 ### Phase 3 - Signal-Based MVP
 
-- Ship the smallest useful user surface:
+- The first useful public user surface now exists:
   - `set`
-  - `from`
-  - `to`
   - `from_to`
-- Support the first practical types before broadening:
-  - `f32`
-  - `f64`
-  - small float arrays
-- Prefer correctness and interruption behavior over ambitious API breadth.
+  - `animate`
+  - `use_motion()`
+  - `SignalTarget<T>`
+- Current practical supported value types come from the underlying `kinetocore` Phase-1 surface.
+- `to` and `from` remain intentionally deferred.
+
+**Status:** complete for the first MVP.
 
 ### Phase 4 - Timeline and Spring Hooks
 
@@ -273,9 +291,11 @@ This sequence keeps the first delivery small without locking the crate into a si
 
 ## Immediate Next Actions
 
-1. Keep this roadmap as the reference for the crate direction.
-2. Populate a local `animation/reference/` lane for `gsap` and `bevy_tweening`, then extract the behavior and architecture checkpoints that matter for this crate.
-3. Implement the minimum `kinetocore` pieces required for real interpolation and tweens.
-4. Build `kinetoxus` around a signal-based MVP without freezing the crate into signal-only architecture.
-5. Dogfood the first verbs in `monoxus`.
-6. Add the first non-signal target adapter with `trioxus` in mind.
+1. [x] Keep this roadmap as the reference for the crate direction.
+2. [x] Populate a local `animation/reference/` lane for `gsap` and `bevy_tweening`, then extract the behavior and architecture checkpoints that matter for this crate.
+3. [x] Implement the minimum `kinetocore` pieces required for real interpolation and tweens.
+4. [x] Build `kinetoxus` around a signal-based MVP without freezing the crate into signal-only architecture.
+5. [x] Migrate frame driver ownership to shared `oxidase::frame` (v0.1.3).
+6. [ ] Dogfood the first motion verbs in `monoxus` (e.g. tabs, accordion transitions).
+7. [ ] Expand target abstraction to support `to()` / `from()` dynamic sampling.
+8. [ ] Add the first non-signal target adapter with `trioxus` in mind.

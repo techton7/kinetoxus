@@ -9,17 +9,20 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/status-active%20dogfooding-orange.svg" alt="Status: Active Dogfooding" />
   <a href="https://crates.io/crates/kinetoxus"><img src="https://img.shields.io/crates/v/kinetoxus.svg" alt="Crates.io" /></a>
-  <a href="https://docs.rs/kinetoxus"><img src="https://docs.rs/kinetoxus/badge.svg" alt="docs.rs" /></a>
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg" alt="License" /></a>
 </p>
 
 ---
 
+> [!NOTE]
+> **Active Dogfooding Lane**: `kinetoxus` is currently in an active internal dogfooding and boundary-shaping phase across [`kinetocore`](https://github.com/techton7/kinetocore) and [`oxidase`](https://github.com/techton7/oxidase). In accordance with workspace policy, internal dependencies are pinned via reproducible `git + tag` releases ([`kinetocore v0.1.1`](https://github.com/techton7/kinetocore/releases/tag/v0.1.1) and [`oxidase v0.1.3`](https://github.com/techton7/oxidase/releases/tag/oxidase-v0.1.3)). Public crates.io releases and native windowed display-link drivers remain under active development.
+
 **Kinetoxus** is a 100% pure Rust motion facade and multi-target animation platform purpose-built for the [Dioxus](https://dioxuslabs.com) ecosystem.
 Operating on top of [`kinetocore`](https://github.com/techton7/kinetocore), it presents a single, ergonomic motion vocabulary (`set`, `from_to`, `animate`) tailored for Dioxus components, reactive signals, and interactive UI lifecycles.
 
-Built with **zero JavaScript dependencies**, it runs with high-resolution frame timing across both Web (WASM `requestAnimationFrame`) and native/headless environments.
+Built with **zero JavaScript dependencies**, it runs with shared host/runtime frame timing via [`oxidase`](https://github.com/techton7/oxidase) across both Web and native/headless environments.
 
 ## 🧬 Brand & Etymology
 
@@ -39,9 +42,9 @@ Built with **zero JavaScript dependencies**, it runs with high-resolution frame 
 - **`SignalTarget<T>`**: Zero-overhead adapter bridging `Tween<T>` interpolation directly to Dioxus reactive signals (`Signal<T>`).
 - **Deterministic Overwrite**: Automatically detects target collisions and cancels prior active animations on the same signal when a new animation is scheduled.
 
-### 3. Dual Frame Driver Architecture
-- **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driver with automatic idle sleep when all animations complete.
-- **Non-WASM / Desktop**: Deterministic manual driver via `Motion::tick(dt)` for unit testing and custom tick loops. Real native display-link drivers are explicitly planned for future milestones.
+### 3. Shared Frame Driver Architecture (`oxidase::frame`)
+- **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driven by `oxidase::frame`.
+- **Non-WASM / Desktop**: Deterministic manual/headless ticking via `Motion::tick(dt)`, delegating to `oxidase::frame::tick(dt)`. Real hosted native display-link drivers remain explicitly deferred.
 
 ---
 
