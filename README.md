@@ -20,7 +20,7 @@
 > **Active Dogfooding Lane**: `kinetoxus` is currently in an active internal dogfooding and boundary-shaping phase across [`kinetocore`](https://github.com/techton7/kinetocore) and [`oxidase`](https://github.com/techton7/oxidase). In accordance with workspace policy, internal dependencies are pinned via reproducible `git + tag` releases ([`kinetocore v0.1.1`](https://github.com/techton7/kinetocore/releases/tag/v0.1.1) and [`oxidase v0.1.4`](https://github.com/techton7/oxidase/releases/tag/oxidase-v0.1.4)). Public crates.io releases and native windowed display-link drivers remain under active development.
 
 **Kinetoxus** is a 100% pure Rust motion facade and multi-target animation platform purpose-built for the [Dioxus](https://dioxuslabs.com) ecosystem.
-Operating on top of [`kinetocore`](https://github.com/techton7/kinetocore), it presents a single, ergonomic motion vocabulary (`set`, `from_to`, `animate`) tailored for Dioxus components, reactive signals, and interactive UI lifecycles.
+Operating on top of [`kinetocore`](https://github.com/techton7/kinetocore), it presents a single, ergonomic motion vocabulary (`set`, `from_to`, `to`, `from`, `animate`) tailored for Dioxus components, reactive signals, and interactive UI lifecycles.
 
 Built with **zero JavaScript dependencies**, it runs with shared host/runtime frame timing via [`oxidase`](https://github.com/techton7/oxidase) across both Web and native/headless environments.
 
@@ -94,7 +94,7 @@ pub fn AnimatedButton() -> Element {
 
 - [x] **Project Initialization**: Repository scaffold, dual MIT/Apache-2.0 licenses, Release-plz CI setup.
 - [x] **Phase-1 (Dioxus Signal MVP)**: `use_motion()`, `motion.set()`, `motion.from_to()`, `SignalTarget<T>`, and Web RAF driver.
-- [ ] **Phase-2 (Current-Value Tweens)**: `to()`, `from()`, dynamic start-value sampling, and granular overwrite policies.
+- [x] **Phase-2 (Current-Value Tweens)**: `to()`, `from()`, dynamic start-value sampling, and lazy endpoint initialization.
 - [ ] **Phase-3 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
 - [ ] **Phase-4 (Non-Signal Target Adapters)**: `HandleTarget<T>` and direct buffer-writing adapters for `trioxus` (WGPU 3D) and `nodoxus` (2D node graph).
 

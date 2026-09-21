@@ -296,6 +296,6 @@ This sequence keeps the first delivery small without locking the crate into a si
 3. [x] Implement the minimum `kinetocore` pieces required for real interpolation and tweens.
 4. [x] Build `kinetoxus` around a signal-based MVP without freezing the crate into signal-only architecture.
 5. [x] Migrate frame driver ownership to shared `oxidase::frame` (v0.1.4 git-tag lane).
-6. [ ] Dogfood the first motion verbs in `monoxus` (e.g. tabs, accordion transitions).
-7. [ ] Expand target abstraction to support `to()` / `from()` dynamic sampling.
+6. [x] Expand target abstraction to support `to()` / `from()` dynamic sampling via `kinetocore` Phase-2.
+7. [ ] Dogfood the motion verbs in `monoxus` (e.g. tabs, accordion transitions).
 8. [ ] Add the first non-signal target adapter with `trioxus` in mind.

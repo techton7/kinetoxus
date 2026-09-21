@@ -5,14 +5,14 @@
 //! ## Overview
 //!
 //! `kinetoxus` is the Dioxus-facing motion facade built on top of [`kinetocore`].
-//! It delivers an ergonomic motion vocabulary (`set`, `from_to`, `animate`) tailored for
+//! It delivers an ergonomic motion vocabulary (`set`, `from_to`, `to`, `from`, `animate`) tailored for
 //! Dioxus components, reactive signals ([`SignalTarget`]), and interactive UI lifecycles.
 //!
-//! ### Core Features (Phase-1 Signal MVP)
+//! ### Core Features
 //!
 //! - **[`use_motion()`]**: Component-scoped motion hook with automatic unmount cancellation.
-//! - **[`Motion`]**: Motion controller supporting immediate `set()` and time-based `from_to()`.
-//! - **[`SignalTarget`]**: Zero-overhead adapter bridging tweens to reactive Dioxus [`dioxus::prelude::Signal`].
+//! - **[`Motion`]**: Motion controller supporting immediate `set()`, deterministic `from_to()`, and dynamic `to()` / `from()`.
+//! - **[`SignalTarget`]**: Zero-overhead adapter bridging tweens to reactive Dioxus [`dioxus::prelude::Signal`], supporting dynamic current-value sampling.
 //! - **Shared Frame Ownership via [`oxidase`]**:
 //!   - **Web (`wasm32`)**: Hosted `requestAnimationFrame` via `oxidase::frame`.
 //!   - **Non-WASM / Desktop**: Deterministic manual/headless ticking via [`Motion::tick`] and `oxidase::frame::tick(dt)`.
@@ -38,6 +38,8 @@ pub use kinetocore::ease::Ease;
 pub use kinetocore::easing;
 pub use kinetocore::interpolate::{lerp, Interpolate};
 pub use kinetocore::repeat::{RepeatCount, RepeatStrategy};
+pub use kinetocore::state::TweenEndpoints;
+pub use kinetocore::target::{IntoTargetSampler, Target, TargetSampler};
 pub use kinetocore::tween::Tween;
 
 /// Current package version of kinetoxus.

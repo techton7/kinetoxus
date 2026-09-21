@@ -50,6 +50,8 @@ fn App() -> Element {
     let m_fade = motion.clone();
     let m_slide = motion.clone();
     let m_spin = motion.clone();
+    let m_to = motion.clone();
+    let m_from = motion.clone();
     let m_reset = motion;
 
     rsx! {
@@ -135,6 +137,25 @@ fn App() -> Element {
                             .ease(Ease::BackOut);
                     },
                     "💫 Spin (BackOut)"
+                }
+                button {
+                    id: "btn-to",
+                    style: "padding: 0.7rem 1.25rem; border-radius: 10px; border: none; background: #f59e0b; color: white; font-weight: 600; font-size: 0.9rem; cursor: pointer;",
+                    onclick: move |_| {
+                        let dest = if offset_x() > 0.0 { -100.0f32 } else { 100.0f32 };
+                        m_to.to(offset_x, dest, Duration::from_millis(500))
+                            .ease(Ease::CubicOut);
+                    },
+                    "➡️ to (Current -> ±100px)"
+                }
+                button {
+                    id: "btn-from",
+                    style: "padding: 0.7rem 1.25rem; border-radius: 10px; border: none; background: #059669; color: white; font-weight: 600; font-size: 0.9rem; cursor: pointer;",
+                    onclick: move |_| {
+                        m_from.from(scale, 0.2f32, Duration::from_millis(600))
+                            .ease(Ease::BackOut);
+                    },
+                    "🌟 from (0.2 -> Current)"
                 }
                 button {
                     id: "btn-reset",

@@ -186,6 +186,74 @@ impl Motion {
         self.start_animation(target, tween)
     }
 
+    /// Animates `target` from its current value to `to` over `duration`.
+    ///
+    /// The starting value is lazily sampled from `target` upon playback initialization.
+    /// Any previous animation running on `target` is cancelled automatically,
+    /// enabling smooth interruptible redirection toward the new destination.
+    ///
+    /// Returns a [`MotionHandle`] for fluent configuration (such as [`MotionHandle::ease`])
+    /// or cancellation.
+    ///
+    /// # Example
+    ///
+    /// ```rust,no_run
+    /// use std::time::Duration;
+    /// use dioxus::prelude::*;
+    /// use kinetoxus::prelude::*;
+    ///
+    /// fn example(motion: &Motion, signal: Signal<f32>) {
+    ///     motion.to(signal, 100.0, Duration::from_millis(500))
+    ///         .ease(Ease::QuadOut);
+    /// }
+    /// ```
+    pub fn to<T: Interpolate + 'static>(
+        &self,
+        target: impl Into<SignalTarget<T>>,
+        to: T,
+        duration: Duration,
+    ) -> MotionHandle {
+        let target = target.into();
+        let tween = Tween::to(target, to, duration);
+        self.start_animation(target, tween)
+    }
+
+    /// Animates `target` from an explicit `from` value to its current value over `duration`.
+    ///
+    /// The destination value is captured from `target` upon invocation, and `target` is
+    /// set to `from` immediately to avoid visual flicker.
+    ///
+    /// Returns a [`MotionHandle`] for fluent configuration (such as [`MotionHandle::ease`])
+    /// or cancellation.
+    ///
+    /// # Example
+    ///
+    /// ```rust,no_run
+    /// use std::time::Duration;
+    /// use dioxus::prelude::*;
+    /// use kinetoxus::prelude::*;
+    ///
+    /// fn example(motion: &Motion, signal: Signal<f32>) {
+    ///     // Animate from 0.0 opacity to current signal opacity over 400ms
+    ///     motion.from(signal, 0.0, Duration::from_millis(400))
+    ///         .ease(Ease::CubicOut);
+    /// }
+    /// ```
+    pub fn from<T: Interpolate + 'static>(
+        &self,
+        target: impl Into<SignalTarget<T>>,
+        from: T,
+        duration: Duration,
+    ) -> MotionHandle {
+        let target = target.into();
+        let mut tween = Tween::from(target, from.clone(), duration);
+        // Latch destination from current target state before setting start value
+        tween.ensure_initialized();
+        // Set target immediately to start value to avoid a one-frame flicker
+        target.set(from);
+        self.start_animation(target, tween)
+    }
+
     /// Animates `target` using a pre-configured [`Tween<T>`].
     ///
     /// This allows reusing any tween constructed via `kinetocore`'s fluent builder.

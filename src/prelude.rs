@@ -10,4 +10,6 @@ pub use kinetocore::direction::PlaybackDirection;
 pub use kinetocore::ease::Ease;
 pub use kinetocore::interpolate::{lerp, Interpolate};
 pub use kinetocore::repeat::{RepeatCount, RepeatStrategy};
+pub use kinetocore::state::TweenEndpoints;
+pub use kinetocore::target::{IntoTargetSampler, Target, TargetSampler};
 pub use kinetocore::tween::Tween;

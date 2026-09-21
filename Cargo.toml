@@ -12,7 +12,7 @@ categories = ["gui", "visualization", "multimedia"]
 
 [dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
-kinetocore = { version = "0.1.1", git = "https://github.com/techton7/kinetocore.git", tag = "v0.1.1" }
+kinetocore = { version = "0.1.1", git = "https://github.com/techton7/kinetocore.git", branch = "main" }
 oxidase = { version = "0.1.4", git = "https://github.com/techton7/oxidase.git", tag = "oxidase-v0.1.4" }
 
 [dev-dependencies]
