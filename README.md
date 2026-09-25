@@ -17,7 +17,7 @@
 ---
 
 > [!NOTE]
-> **Active Dogfooding Lane**: `kinetoxus` is currently in an active internal dogfooding and boundary-shaping phase across [`kinetocore`](https://github.com/techton7/kinetocore) and [`oxidase`](https://github.com/techton7/oxidase). In accordance with workspace policy, internal dependencies are pinned via reproducible `git + tag` releases ([`kinetocore v0.1.1`](https://github.com/techton7/kinetocore/releases/tag/v0.1.1) and [`oxidase v0.1.4`](https://github.com/techton7/oxidase/releases/tag/oxidase-v0.1.4)). Public crates.io releases and native windowed display-link drivers remain under active development.
+> **Active Dogfooding Lane**: `kinetoxus` is currently in an active internal dogfooding and boundary-shaping phase across [`kinetocore`](https://github.com/techton7/kinetocore) and [`oxidase`](https://github.com/techton7/oxidase). In accordance with workspace policy, internal dependencies are pinned via reproducible `git + tag` releases ([`kinetocore v0.1.1`](https://github.com/techton7/kinetocore/releases/tag/v0.1.1) and [`oxidase v0.1.7`](https://github.com/techton7/oxidase/releases/tag/oxidase-v0.1.7)). Public crates.io releases and native windowed display-link drivers remain under active development.
 
 **Kinetoxus** is a 100% pure Rust motion facade and multi-target animation platform purpose-built for the [Dioxus](https://dioxuslabs.com) ecosystem.
 Operating on top of [`kinetocore`](https://github.com/techton7/kinetocore), it presents a single, ergonomic motion vocabulary (`set`, `from_to`, `to`, `from`, `animate`) tailored for Dioxus components, reactive signals, and interactive UI lifecycles.

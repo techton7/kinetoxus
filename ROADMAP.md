@@ -15,6 +15,9 @@ As of the current dogfooding lane:
    - `SignalTarget<T>`
    - `set`
    - `from_to`
+   - `to`
+   - `from`
+   - `animate`
 3. Shared frame ownership now routes through `oxidase::frame`, while hosted native maturity remains an actively evolving lane rather than a fully settled public contract.
 
 ## Mission
@@ -127,7 +130,7 @@ This is the shortest path to dogfooding and should happen first.
 1. Implement the minimum useful `kinetocore` foundation needed by `kinetoxus`.
 2. Expose `set`, `from`, `to`, and `from_to` for `SignalTarget<T>`.
 3. Add a Web-first frame driver and Dioxus hook lifecycle management.
-4. Dogfood the result in `monoxus` and, when useful, in `oxidase` playground scenarios.
+4. Dogfood the result in `kinetoxus`’s own example/demo surfaces and, when useful, in `oxidase` playground scenarios.
 5. Prove interruption, restart, completion, and cleanup behavior in a small real demo.
 
 ### Track B: Unified Facade Expansion
@@ -158,9 +161,9 @@ In practice, that means:
 | 0 | Direction reset | Align docs and crate positioning around pure Rust motion and dual target support | `[completed]` |
 | 1 | Thin facade over `kinetocore` | Reuse core interpolation and tween semantics instead of duplicating math in `kinetoxus` | `[completed]` |
 | 2 | Frame driver and lifecycle | Shared frame integration through `oxidase::frame`, cleanup on unmount, and a stable per-component motion owner | `[completed]` |
-| 3 | Signal-based MVP | `use_motion()`, `SignalTarget<T>`, `set`, `from_to`, and first real Dioxus consumer surface | `[completed]` |
-| 4 | Timeline and spring hooks | `use_timeline`, `use_spring`, interruptible playback, reverse, seek, and completion hooks | `[runtime-proven]` |
-| 5 | Dogfood in `monoxus` | Real transitions on one or more playground surfaces to prove ergonomics | `[runtime-proven]` |
+| 3 | Signal-based MVP | `use_motion()`, `SignalTarget<T>`, `set`, `from_to`, `to`, `from`, and first real Dioxus consumer surface | `[completed]` |
+| 4 | Consumer dogfood in `kinetoxus` examples | Richer self-hosted Dioxus examples validating real consumer ergonomics | `[current]` |
+| 5 | Timeline and spring hooks | `use_timeline`, `use_spring`, interruptible playback, reverse, seek, and completion hooks | `[runtime-proven]` |
 | 6 | Non-signal target support | `HandleTarget<T>` and related adapters for renderer-owned values | `[contract-implemented]` + `[runtime-proven]` |
 | 7 | `trioxus` integration | Animate camera, transform, or uniform-like handles through `kinetoxus` verbs | `[runtime-proven]` |
 | 8 | Browser-edge adapters | Optional `StyleTarget` or browser-facing motion helpers where they clearly reduce overhead | `[runtime-proven]` |
@@ -198,15 +201,31 @@ In practice, that means:
 - The first useful public user surface now exists:
   - `set`
   - `from_to`
+  - `to`
+  - `from`
   - `animate`
   - `use_motion()`
   - `SignalTarget<T>`
-- Current practical supported value types come from the underlying `kinetocore` Phase-1 surface.
-- `to` and `from` remain intentionally deferred.
+- Current practical supported value types and target-aware semantics now come from the underlying `kinetocore` Phase-1 and Phase-2 surface.
 
 **Status:** complete for the first MVP.
 
-### Phase 4 - Timeline and Spring Hooks
+### Phase 4 - Consumer Dogfood in `kinetoxus` Examples
+
+- Use `kinetoxus`’s own examples and demo surfaces as the first proving ground for:
+  - `set`
+  - `from_to`
+  - `to`
+  - `from`
+- Prefer richer self-hosted Dioxus scenarios before pulling another library into the first feedback loop.
+- Use this phase to decide whether the next pressure belongs in:
+  - spring hooks
+  - timeline ergonomics
+  - non-signal targets
+
+**Status:** current focus.
+
+### Phase 5 - Timeline and Spring Hooks
 
 - Add higher-level Dioxus hooks once the verb layer is credible.
 - Prioritize:
@@ -217,15 +236,6 @@ In practice, that means:
   - progress
   - completion callbacks
 - Springs should feel native to Dioxus state updates, not bolted on as a separate library.
-
-### Phase 5 - Dogfood in `monoxus`
-
-- Use `monoxus` playgrounds as the first ergonomic proving ground.
-- Start with simple surfaces where animation success is easy to judge:
-  - tabs
-  - accordion or collapsible
-  - a dedicated motion demo page
-- Avoid coupling too early to primitives whose runtime lifecycle already depends on CSS animation completion semantics unless that coupling is intentional.
 
 ### Phase 6 - Non-Signal Target Support
 
@@ -274,8 +284,8 @@ The preferred validation ladder is:
    - one value
    - one button
    - one animation lifecycle
-2. **`monoxus` motion proof**
-   - verify that the verbs feel good in real Dioxus component code
+2. **Richer self-hosted `kinetoxus` demos**
+   - verify that the verbs feel good in realistic Dioxus app-like code
 3. **`trioxus` handle proof**
    - verify the same motion language can drive non-signal targets
 
@@ -297,5 +307,5 @@ This sequence keeps the first delivery small without locking the crate into a si
 4. [x] Build `kinetoxus` around a signal-based MVP without freezing the crate into signal-only architecture.
 5. [x] Migrate frame driver ownership to shared `oxidase::frame` (v0.1.4 git-tag lane).
 6. [x] Expand target abstraction to support `to()` / `from()` dynamic sampling via `kinetocore` Phase-2.
-7. [ ] Dogfood the motion verbs in `monoxus` (e.g. tabs, accordion transitions).
+7. [ ] Dogfood the motion verbs in richer `kinetoxus` examples and app-like demos.
 8. [ ] Add the first non-signal target adapter with `trioxus` in mind.
