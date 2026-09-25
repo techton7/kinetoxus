@@ -192,9 +192,9 @@ In practice, that means:
 - Motion ownership is now tied to the component lifecycle and shared frame-driving has begun moving into `oxidase::frame`.
 - Web hosted timing is real.
 - Manual/headless timing is real.
-- Hosted native timing remains a separate maturity track and should continue to be described honestly.
+- Hosted native timing is enabled via `#[oxidase::main]` and proven via `blitz-host` on the `oxidase v0.1.7` lane.
 
-**Status:** complete for the first shared-frame migration slice.
+**Status:** complete for the shared-frame migration slice.
 
 ### Phase 3 - Signal-Based MVP
 
@@ -305,7 +305,8 @@ This sequence keeps the first delivery small without locking the crate into a si
 2. [x] Populate a local `animation/reference/` lane for `gsap` and `bevy_tweening`, then extract the behavior and architecture checkpoints that matter for this crate.
 3. [x] Implement the minimum `kinetocore` pieces required for real interpolation and tweens.
 4. [x] Build `kinetoxus` around a signal-based MVP without freezing the crate into signal-only architecture.
-5. [x] Migrate frame driver ownership to shared `oxidase::frame` (v0.1.4 git-tag lane).
+5. [x] Migrate frame driver ownership to shared `oxidase::frame` (`oxidase v0.1.7` git-tag lane).
 6. [x] Expand target abstraction to support `to()` / `from()` dynamic sampling via `kinetocore` Phase-2.
-7. [ ] Dogfood the motion verbs in richer `kinetoxus` examples and app-like demos.
-8. [ ] Add the first non-signal target adapter with `trioxus` in mind.
+7. [x] Runtime-prove `signal_demo` consumer surface on hosted native lane via `oxidase v0.1.7` and `blitz-host`.
+8. [ ] Dogfood the motion verbs in richer `kinetoxus` examples and app-like demos.
+9. [ ] Add the first non-signal target adapter with `trioxus` in mind.

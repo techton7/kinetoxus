@@ -6,11 +6,10 @@
 //! high-level consumer DX (`use_frame` and `next_frame().await`) for reactive physics and
 //! real-time telemetry HUD updates.
 //!
-//! # Native Zero-Wiring Boundary
-//! This demo launches via standard `dioxus::launch(App)` and does NOT depend on Blitz
-//! or `dioxus-native`. The sovereign native zero-wiring hosted VSync bootstrap story
-//! (`#[oxidase::main]`) is exclusively owned, verified, and runtime-proven by the dedicated
-//! runner `crates/oxidase-native-runner`.
+//! # Hosted Native Runtime
+//! When running natively, this example leverages `#[oxidase::main]` to transparently bind
+//! the hosted Blitz/Vello VSync render loop and (optionally) the `blitz-host` out-of-process
+//! debug control plane with zero consumer wiring.
 
 use std::time::Duration;
 
@@ -18,6 +17,7 @@ use dioxus::prelude::*;
 use kinetoxus::prelude::*;
 use oxidase::prelude::*;
 
+#[oxidase::main]
 fn main() {
     dioxus::launch(App);
 }
@@ -72,12 +72,13 @@ fn App() -> Element {
 
             // Real-time telemetry HUD
             div {
+                id: "telemetry-hud",
                 style: "display: flex; gap: 1.5rem; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); padding: 0.75rem 1.5rem; border-radius: 9999px; border: 1px solid rgba(71, 85, 105, 0.4); font-size: 0.85rem; font-family: monospace; color: #38bdf8;",
-                span { "fps: {fps:.0}" }
-                span { "scale: {scale:.2}" }
-                span { "opacity: {opacity:.2}" }
-                span { "x: {offset_x:.1}px" }
-                span { "rot: {rotation:.1}°" }
+                span { id: "hud-fps", "fps: {fps:.0}" }
+                span { id: "hud-scale", "scale: {scale:.2}" }
+                span { id: "hud-opacity", "opacity: {opacity:.2}" }
+                span { id: "hud-x", "x: {offset_x:.1}px" }
+                span { id: "hud-rot", "rot: {rotation:.1}°" }
             }
 
             // Animated Visual Box

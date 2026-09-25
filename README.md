@@ -44,7 +44,7 @@ Built with **zero JavaScript dependencies**, it runs with shared host/runtime fr
 
 ### 3. Shared Frame Driver Architecture (`oxidase::frame`)
 - **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driven by `oxidase::frame`.
-- **Non-WASM / Desktop**: Deterministic manual/headless ticking via `Motion::tick(dt)`, delegating to `oxidase::frame::tick(dt)`. Real hosted native display-link drivers remain explicitly deferred.
+- **Non-WASM / Desktop**: Hosted native VSync frame driving via `#[oxidase::main]` (`native` / `blitz-host` features), alongside deterministic manual/headless ticking via `Motion::tick(dt)` and `oxidase::frame::tick(dt)` for unit and regression tests.
 
 ---
 
