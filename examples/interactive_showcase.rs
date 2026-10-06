@@ -13,11 +13,11 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    let mut x = use_signal(|| 0.0f32);
-    let mut y = use_signal(|| 0.0f32);
-    let mut scale = use_signal(|| 1.0f32);
-    let mut rot = use_signal(|| 0.0f32);
-    let mut opacity = use_signal(|| 1.0f32);
+    let x = use_signal(|| 0.0f32);
+    let y = use_signal(|| 0.0f32);
+    let scale = use_signal(|| 1.0f32);
+    let rot = use_signal(|| 0.0f32);
+    let opacity = use_signal(|| 1.0f32);
     let mut fps = use_signal(|| 60.0f64);
     let mut status = use_signal(|| "idle".to_string());
 
@@ -68,60 +68,54 @@ fn App() -> Element {
                 button {
                     id: "btn-pop",
                     onclick: move |_| {
-                        status.set("animating".to_string());
+                        status.set("pop".to_string());
                         m_pop.from_to(scale, 0.7f32, 1.0f32, Duration::from_millis(500))
                             .ease(Ease::BackOut);
-                        status.set("settled".to_string());
                     },
                     "Pop"
                 }
                 button {
                     id: "btn-slide",
                     onclick: move |_| {
-                        status.set("animating".to_string());
+                        status.set("slide".to_string());
                         m_slide.from_to(x, -150.0f32, 150.0f32, Duration::from_millis(700))
                             .ease(Ease::QuadInOut);
-                        status.set("settled".to_string());
                     },
                     "Slide"
                 }
                 button {
                     id: "btn-spin",
                     onclick: move |_| {
-                        status.set("animating".to_string());
+                        status.set("spin".to_string());
                         m_spin.from_to(rot, 0.0f32, 360.0f32, Duration::from_millis(600))
                             .ease(Ease::QuadInOut);
-                        status.set("settled".to_string());
                     },
                     "Spin"
                 }
                 button {
                     id: "btn-to-center",
                     onclick: move |_| {
-                        status.set("interrupted".to_string());
+                        status.set("interrupted_to_center".to_string());
                         m_center.to(x, 0.0f32, Duration::from_millis(400));
                         m_center.to(y, 0.0f32, Duration::from_millis(400));
-                        status.set("settled".to_string());
                     },
                     "To Center"
                 }
                 button {
                     id: "btn-fade",
                     onclick: move |_| {
-                        status.set("animating".to_string());
-                        m_fade.to(opacity, 0.2f32, Duration::from_millis(300));
-                        m_fade.to(opacity, 1.0f32, Duration::from_millis(300));
-                        status.set("settled".to_string());
+                        status.set("fade".to_string());
+                        let target = if opacity() < 0.5 { 1.0f32 } else { 0.2f32 };
+                        m_fade.to(opacity, target, Duration::from_millis(300));
                     },
                     "Fade"
                 }
                 button {
                     id: "btn-from-top",
                     onclick: move |_| {
-                        status.set("animating".to_string());
+                        status.set("from_top".to_string());
                         m_drop.from(y, -200.0f32, Duration::from_millis(500))
                             .ease(Ease::BounceOut);
-                        status.set("settled".to_string());
                     },
                     "From Top"
                 }
@@ -129,12 +123,11 @@ fn App() -> Element {
                     id: "btn-reset",
                     onclick: move |_| {
                         status.set("reset".to_string());
-                        m_reset.cancel_all();
-                        x.set(0.0);
-                        y.set(0.0);
-                        scale.set(1.0);
-                        rot.set(0.0);
-                        opacity.set(1.0);
+                        m_reset.set(x, 0.0f32);
+                        m_reset.set(y, 0.0f32);
+                        m_reset.set(scale, 1.0f32);
+                        m_reset.set(rot, 0.0f32);
+                        m_reset.set(opacity, 1.0f32);
                     },
                     "Reset"
                 }
