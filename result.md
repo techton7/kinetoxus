@@ -76,3 +76,40 @@ A host-neutral showcase example (`examples/spring_showcase.rs`) was constructed 
 Both windows are currently live and running in the background:
 - **Web Demo**: [http://localhost:8080](http://localhost:8080)
 - **Native Window**: Desktop GUI window (PID: 9182)
+
+---
+
+## 5. Milestone T-5: Native Graphics Optimization & Scaling Band Artifact Root-Cause Inspection
+
+### 5.1 Native Graphics Optimization (`opt-level = 3`)
+- **Optimization Added**: Added `[profile.dev.package."*"] opt-level = 3` to `kinetoxus/Cargo.toml`.
+- **Telemetry Verification**:
+  - Unoptimized debug build: ~30 FPS due to unoptimized rasterization paths in `wgpu`, `glyphon`, and `blitz-paint`.
+  - Optimized debug build: Stable **60–69 FPS** matching native display VSync cadence without frame starvation or jank.
+
+### 5.2 Systematic Render-Feature Bisect (`examples/bisect_card.rs`)
+To determine why an L-shaped band appeared on the right and bottom edges of `#animated-card` at `scale(1.20)` in Blitz Native (`native.png` vs `web.png`), a 5-card diagnostic matrix was built and captured (`target/bisect_grid.png`):
+1. **Card 1 (Baseline: Gradient + Border 2px + Border-Radius + Shadow + Scale 1.20)**: Artifact present (prominent blue L-shaped band on right and bottom edges).
+2. **Card 2 (Solid Background `#6366f1` + Border + Radius + Shadow + Scale 1.20)**: **100% Clean (Zero artifact)**. Proves geometry, border, border-radius, box-shadow, and scale matrix transforms are completely innocent.
+3. **Card 3 (Gradient + `background-repeat: no-repeat` + Border + Radius + Shadow + Scale 1.20)**: **100% Clean (Zero artifact)**. Conclusively isolates the trigger to gradient tiling logic.
+4. **Card 4 (Gradient + No Box Shadow + Scale 1.20)**: Artifact present. Proves `box-shadow` is not involved.
+5. **Card 5 (Gradient + No Border-Radius + Scale 1.20)**: Artifact present. Proves `border-radius` is not involved.
+
+### 5.3 Mathematical Root Cause in Blitz Paint Pipeline
+Traced directly to `packages/blitz-paint/src/render/background.rs`:
+1. By CSS specification, `background-origin` defaults to `padding-box` (inner box: $196 \times 140\text{px}$ inside a $2\text{px}$ border), while `background-clip` defaults to `border-box` (outer box: $200 \times 144\text{px}$).
+2. In `gradient_axis_tiling`:
+   - `clip_is_outer` evaluates to `true`.
+   - `area_len = 200px`, `tile_len = 196px`.
+   - Under default CSS `background-repeat: repeat`, Blitz computes:
+     $$\text{count} = \left\lceil \frac{\text{area\_len} + \text{extend\_len}}{\text{tile\_len}} \right\rceil = \left\lceil \frac{200}{196} \right\rceil = 2$$
+3. Blitz iterates $wc \in [0, 2)$ and $hc \in [0, 2)$, painting a **second tile** at offset $196\text{px}$.
+4. The second tile restarts the linear gradient from offset $0.0$ with the starting gradient color stop (`#6366f1`), rendering an extraneous $4\text{px}$ band in the border overflow area.
+5. At `scale = 1.0`, the $4\text{px}$ band is partially hidden under the $2\text{px}$ border stroke and antialiasing. At `scale = 1.20`, the transform magnifies the coordinate space, visually exposing the discontinuous repeating gradient tile.
+
+### 5.4 Strategic Resolution & Upstream Engine Roadmap
+- **Immediate Workaround (Userland / Showcase)**:
+  Specify `background-repeat: no-repeat;` (or `background-origin: border-box;`) on elements combining linear gradients with borders.
+- **Upstream Engine Fix (Blitz)**:
+  In `blitz-paint/src/render/background.rs`, when `clip_is_outer` is true solely due to `background-clip: border-box` extending beyond `background-origin: padding-box`, clamp or extend brush bounds to the clip rectangle rather than incrementing $\text{count} = 2$.
+
