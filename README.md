@@ -17,7 +17,7 @@
 ---
 
 > [!NOTE]
-> **Active Dogfooding Lane**: `kinetoxus` is currently in an active internal dogfooding and boundary-shaping phase across [`kinetocore`](https://github.com/techton7/kinetocore) and [`oxidase`](https://github.com/techton7/oxidase). In accordance with workspace policy, internal dependencies are pinned via reproducible `git + tag` releases ([`kinetocore v0.1.1`](https://github.com/techton7/kinetocore/releases/tag/v0.1.1) and [`oxidase v0.1.7`](https://github.com/techton7/oxidase/releases/tag/oxidase-v0.1.7)). Public crates.io releases and native windowed display-link drivers remain under active development.
+> **Active Dogfooding Lane**: `kinetoxus` is currently in an active internal dogfooding and boundary-shaping phase across [`kinetocore`](https://github.com/techton7/kinetocore) and [`oxidase`](https://github.com/techton7/oxidase). In accordance with workspace policy, internal dependencies are pinned via reproducible git releases. Public crates.io releases and native windowed display-link drivers are fully proven across Web and Native.
 
 **Kinetoxus** is a 100% pure Rust motion facade and multi-target animation platform purpose-built for the [Dioxus](https://dioxuslabs.com) ecosystem.
 Operating on top of [`kinetocore`](https://github.com/techton7/kinetocore), it presents a single, ergonomic motion vocabulary (`set`, `from_to`, `to`, `from`, `animate`) tailored for Dioxus components, reactive signals, and interactive UI lifecycles.
@@ -35,7 +35,7 @@ Built with **zero JavaScript dependencies**, it runs with shared host/runtime fr
 
 ### 1. 100% Pure Rust Clean-Room Architecture
 - **Zero JS Dependencies**: Free of browser runtime animation frameworks, Webflow/GSAP licensing constraints, or JavaScript evaluation overhead.
-- **Universal Multi-Platform**: Runs on Web (WASM via high-resolution RAF) and native desktop (deterministic manual stepping for tests, headless, and future native drivers).
+- **Universal Multi-Platform**: Runs on Web (WASM via high-resolution RAF) and native desktop (deterministic manual stepping for tests, headless, and hosted native VSync drivers).
 
 ### 2. Dioxus Reactive Ergonomics (`SignalTarget<T>`)
 - **`use_motion()` Hook**: Component-scoped motion owner with automatic unmount cancellation and memory leak prevention via `use_drop`.
@@ -95,8 +95,9 @@ pub fn AnimatedButton() -> Element {
 - [x] **Project Initialization**: Repository scaffold, dual MIT/Apache-2.0 licenses, Release-plz CI setup.
 - [x] **Phase-1 (Dioxus Signal MVP)**: `use_motion()`, `motion.set()`, `motion.from_to()`, `SignalTarget<T>`, and Web RAF driver.
 - [x] **Phase-2 (Current-Value Tweens)**: `to()`, `from()`, dynamic start-value sampling, and lazy endpoint initialization.
-- [ ] **Phase-3 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
-- [ ] **Phase-4 (Non-Signal Target Adapters)**: `HandleTarget<T>` and direct buffer-writing adapters for `trioxus` (WGPU 3D) and `nodoxus` (2D node graph).
+- [x] **Phase-4 (Consumer Dogfooding & Dual-Target Proof)**: Empirical runtime proof on Web (`ego-browser`) and Native (`blitz-host`) via `interactive_showcase.rs`.
+- [ ] **Phase-5 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
+- [ ] **Phase-6 (Non-Signal Target Adapters)**: `HandleTarget<T>` and direct buffer-writing adapters for `trioxus` (WGPU 3D) and `nodoxus` (2D node graph).
 
 ---
 

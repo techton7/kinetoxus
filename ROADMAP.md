@@ -162,7 +162,7 @@ In practice, that means:
 | 1 | Thin facade over `kinetocore` | Reuse core interpolation and tween semantics instead of duplicating math in `kinetoxus` | `[completed]` |
 | 2 | Frame driver and lifecycle | Shared frame integration through `oxidase::frame`, cleanup on unmount, and a stable per-component motion owner | `[completed]` |
 | 3 | Signal-based MVP | `use_motion()`, `SignalTarget<T>`, `set`, `from_to`, `to`, `from`, and first real Dioxus consumer surface | `[completed]` |
-| 4 | Consumer dogfood in `kinetoxus` examples | Richer self-hosted Dioxus examples validating real consumer ergonomics | `[current]` |
+| 4 | Consumer dogfood in `kinetoxus` examples | Richer self-hosted Dioxus examples (`interactive_showcase.rs`) proven on Web and Native | `[completed]` |
 | 5 | Timeline and spring hooks | `use_timeline`, `use_spring`, interruptible playback, reverse, seek, and completion hooks | `[runtime-proven]` |
 | 6 | Non-signal target support | `HandleTarget<T>` and related adapters for renderer-owned values | `[contract-implemented]` + `[runtime-proven]` |
 | 7 | `trioxus` integration | Animate camera, transform, or uniform-like handles through `kinetoxus` verbs | `[runtime-proven]` |
@@ -223,7 +223,7 @@ In practice, that means:
   - timeline ergonomics
   - non-signal targets
 
-**Status:** current focus.
+**Status:** complete, proven empirically on both Web (`ego-browser`) and Native (`blitz-host`) via `interactive_showcase.rs`.
 
 ### Phase 5 - Timeline and Spring Hooks
 

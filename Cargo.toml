@@ -13,7 +13,7 @@ categories = ["gui", "visualization", "multimedia"]
 [dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
 kinetocore = { version = "0.1.1", git = "https://github.com/techton7/kinetocore.git", branch = "main" }
-oxidase = { version = "0.1.7", git = "https://github.com/techton7/oxidase.git", tag = "oxidase-v0.1.7" }
+oxidase = { git = "https://github.com/techton7/oxidase.git", branch = "main" }
 
 [features]
 default = []
@@ -24,4 +24,12 @@ blitz-host = ["oxidase/blitz-host"]
 dioxus = { version = "0.7.0", default-features = false, features = ["minimal"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
-dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "v0.3.0-alpha.2" }
+dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.1.0" }
+
+[patch.crates-io]
+blitz-shell = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.1.0" }
+blitz-dom = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.1.0" }
+blitz-traits = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.1.0" }
+blitz-paint = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.1.0" }
+wgpu_context = { git = "https://github.com/techton7/anyrender", tag = "wgpu_context-v0.9.1-win-policy" }
+
