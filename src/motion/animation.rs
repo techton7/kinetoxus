@@ -1,9 +1,8 @@
-//! Internal active animation trait and signal-based implementation.
+//! Internal active animation trait and generic tween animation implementation.
 
 use std::any::Any;
 use std::time::Duration;
 
-use dioxus::prelude::Signal;
 use kinetocore::clock::ClockState;
 use kinetocore::direction::PlaybackDirection;
 use kinetocore::ease::Ease;
@@ -11,7 +10,7 @@ use kinetocore::interpolate::Interpolate;
 use kinetocore::repeat::{RepeatCount, RepeatStrategy};
 use kinetocore::tween::Tween;
 
-use crate::target::SignalTarget;
+use crate::target::{AnimationTarget, SignalTarget};
 
 /// Internal trait representing any active, running animation regardless of target type.
 pub trait ActiveAnimation: 'static {
@@ -44,16 +43,20 @@ pub trait ActiveAnimation: 'static {
     fn is_active(&self) -> bool;
 }
 
-/// An active animation driving a [`SignalTarget<T>`] using a [`Tween<T>`].
-pub struct SignalAnimation<T: Interpolate + 'static> {
-    target: SignalTarget<T>,
+/// An active animation driving any [`AnimationTarget<T>`] using a [`Tween<T>`].
+pub struct TweenAnimation<Target, T: Interpolate + 'static> {
+    target: Target,
     tween: Tween<T>,
     active: bool,
 }
 
-impl<T: Interpolate + 'static> SignalAnimation<T> {
-    /// Creates a new `SignalAnimation` binding a target to a tween.
-    pub fn new(target: SignalTarget<T>, tween: Tween<T>) -> Self {
+impl<Target, T> TweenAnimation<Target, T>
+where
+    Target: AnimationTarget<T>,
+    T: Interpolate + 'static,
+{
+    /// Creates a new `TweenAnimation` binding a target to a tween.
+    pub fn new(target: Target, tween: Tween<T>) -> Self {
         Self {
             target,
             tween,
@@ -62,14 +65,18 @@ impl<T: Interpolate + 'static> SignalAnimation<T> {
     }
 }
 
-impl<T: Interpolate + 'static> ActiveAnimation for SignalAnimation<T> {
+impl<Target, T> ActiveAnimation for TweenAnimation<Target, T>
+where
+    Target: AnimationTarget<T>,
+    T: Interpolate + 'static,
+{
     fn step(&mut self, dt: Duration) -> bool {
         if !self.active {
             return false;
         }
 
         let (value, state) = self.tween.step(dt);
-        self.target.set(value);
+        self.target.write_value(value);
 
         if state == ClockState::Completed {
             self.active = false;
@@ -80,13 +87,7 @@ impl<T: Interpolate + 'static> ActiveAnimation for SignalAnimation<T> {
     }
 
     fn is_target_equal(&self, target: &dyn Any) -> bool {
-        if let Some(other) = target.downcast_ref::<SignalTarget<T>>() {
-            return self.target == *other;
-        }
-        if let Some(other) = target.downcast_ref::<Signal<T>>() {
-            return self.target.signal() == *other;
-        }
-        false
+        self.target.is_target_equal(target)
     }
 
     fn cancel(&mut self) {
@@ -113,3 +114,6 @@ impl<T: Interpolate + 'static> ActiveAnimation for SignalAnimation<T> {
         self.active
     }
 }
+
+/// Type alias for backward compatibility with signal-based animations.
+pub type SignalAnimation<T> = TweenAnimation<SignalTarget<T>, T>;

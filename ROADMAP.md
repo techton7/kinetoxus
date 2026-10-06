@@ -163,9 +163,9 @@ In practice, that means:
 | 2 | Frame driver and lifecycle | Shared frame integration through `oxidase::frame`, cleanup on unmount, and a stable per-component motion owner | `[completed]` |
 | 3 | Signal-based MVP | `use_motion()`, `SignalTarget<T>`, `set`, `from_to`, `to`, `from`, and first real Dioxus consumer surface | `[completed]` |
 | 4 | Consumer dogfood in `kinetoxus` examples | Richer self-hosted Dioxus examples (`interactive_showcase.rs`) proven on Web and Native | `[completed]` |
-| 5 | Timeline and spring hooks | `use_timeline`, `use_spring`, interruptible playback, reverse, seek, and completion hooks | `[runtime-proven]` |
-| 6 | Non-signal target support | `HandleTarget<T>` and related adapters for renderer-owned values | `[contract-implemented]` + `[runtime-proven]` |
-| 7 | `trioxus` integration | Animate camera, transform, or uniform-like handles through `kinetoxus` verbs | `[runtime-proven]` |
+| 5 | Non-signal target support | `HandleTarget<T>` and related adapters for interior-mutable handles (`Transform2D`) | `[completed]` |
+| 6 | Timeline and spring hooks | `use_timeline`, `use_spring`, interruptible playback, reverse, seek, and completion hooks | `[next]` |
+| 7 | `trioxus` integration | Animate camera, transform, or uniform-like handles through `kinetoxus` verbs | `[contract-implemented]` |
 | 8 | Browser-edge adapters | Optional `StyleTarget` or browser-facing motion helpers where they clearly reduce overhead | `[runtime-proven]` |
 
 ## Phase Details
@@ -308,5 +308,7 @@ This sequence keeps the first delivery small without locking the crate into a si
 5. [x] Migrate frame driver ownership to shared `oxidase::frame` (`oxidase v0.1.7` git-tag lane).
 6. [x] Expand target abstraction to support `to()` / `from()` dynamic sampling via `kinetocore` Phase-2.
 7. [x] Runtime-prove `signal_demo` consumer surface on hosted native lane via `oxidase v0.1.7` and `blitz-host`.
-8. [ ] Dogfood the motion verbs in richer `kinetoxus` examples and app-like demos.
-9. [ ] Add the first non-signal target adapter with `trioxus` in mind.
+8. [x] Dogfood the motion verbs in richer `kinetoxus` examples and app-like demos (`interactive_showcase.rs`).
+9. [x] Add the first non-signal target adapter (`HandleTarget<T>`) with zero-signal memory progression proof on `Transform2D`.
+10. [ ] Implement timelines and spring hooks (`use_timeline`, `use_spring`).
+

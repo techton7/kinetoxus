@@ -15,9 +15,9 @@ use kinetocore::tween::Tween;
 use oxidase::frame::tick as tick_shared_frame;
 
 use crate::driver::{Driver, DriverKind};
-use crate::motion::animation::{ActiveAnimation, SignalAnimation};
+use crate::motion::animation::{ActiveAnimation, TweenAnimation};
 pub use crate::motion::handle::MotionHandle;
-use crate::target::SignalTarget;
+use crate::target::{AnimationTarget, IntoAnimationTarget};
 
 /// Internal state managing currently running animations.
 pub struct MotionInner {
@@ -134,54 +134,25 @@ impl Motion {
     ///
     /// Any currently running animation on `target` is cancelled immediately,
     /// matching standard GSAP `set()` overwrite semantics.
-    ///
-    /// # Example
-    ///
-    /// ```rust,no_run
-    /// use dioxus::prelude::*;
-    /// use kinetoxus::prelude::*;
-    ///
-    /// fn example(motion: &Motion, signal: Signal<f32>) {
-    ///     motion.set(signal, 100.0);
-    ///     assert_eq!(signal(), 100.0);
-    /// }
-    /// ```
-    pub fn set<T: Interpolate + 'static>(&self, target: impl Into<SignalTarget<T>>, value: T) {
-        let target = target.into();
+    pub fn set<T: Interpolate + 'static>(&self, target: impl IntoAnimationTarget<T>, value: T) {
+        let target = target.into_target();
         self.inner.borrow_mut().cancel_for_target(&target);
-        target.set(value);
+        target.write_value(value);
     }
 
     /// Animates `target` from `from` to `to` over `duration`.
     ///
     /// Any previous animation running on `target` is cancelled automatically.
     /// The target value is set to `from` immediately on invocation.
-    ///
-    /// Returns a [`MotionHandle`] for fluent configuration (such as [`MotionHandle::ease`])
-    /// or cancellation.
-    ///
-    /// # Example
-    ///
-    /// ```rust,no_run
-    /// use std::time::Duration;
-    /// use dioxus::prelude::*;
-    /// use kinetoxus::prelude::*;
-    ///
-    /// fn example(motion: &Motion, signal: Signal<f32>) {
-    ///     motion.from_to(signal, 0.0, 1.0, Duration::from_millis(300))
-    ///         .ease(Ease::CubicOut);
-    /// }
-    /// ```
     pub fn from_to<T: Interpolate + 'static>(
         &self,
-        target: impl Into<SignalTarget<T>>,
+        target: impl IntoAnimationTarget<T>,
         from: T,
         to: T,
         duration: Duration,
     ) -> MotionHandle {
-        let target = target.into();
-        // Immediately render the start value to avoid a one-frame flicker
-        target.set(from.clone());
+        let target = target.into_target();
+        target.write_value(from.clone());
         let tween = Tween::from_to(from, to, duration);
         self.start_animation(target, tween)
     }
@@ -191,30 +162,14 @@ impl Motion {
     /// The starting value is lazily sampled from `target` upon playback initialization.
     /// Any previous animation running on `target` is cancelled automatically,
     /// enabling smooth interruptible redirection toward the new destination.
-    ///
-    /// Returns a [`MotionHandle`] for fluent configuration (such as [`MotionHandle::ease`])
-    /// or cancellation.
-    ///
-    /// # Example
-    ///
-    /// ```rust,no_run
-    /// use std::time::Duration;
-    /// use dioxus::prelude::*;
-    /// use kinetoxus::prelude::*;
-    ///
-    /// fn example(motion: &Motion, signal: Signal<f32>) {
-    ///     motion.to(signal, 100.0, Duration::from_millis(500))
-    ///         .ease(Ease::QuadOut);
-    /// }
-    /// ```
     pub fn to<T: Interpolate + 'static>(
         &self,
-        target: impl Into<SignalTarget<T>>,
+        target: impl IntoAnimationTarget<T>,
         to: T,
         duration: Duration,
     ) -> MotionHandle {
-        let target = target.into();
-        let tween = Tween::to(target, to, duration);
+        let target = target.into_target();
+        let tween = Tween::to(target.clone(), to, duration);
         self.start_animation(target, tween)
     }
 
@@ -222,64 +177,45 @@ impl Motion {
     ///
     /// The destination value is captured from `target` upon invocation, and `target` is
     /// set to `from` immediately to avoid visual flicker.
-    ///
-    /// Returns a [`MotionHandle`] for fluent configuration (such as [`MotionHandle::ease`])
-    /// or cancellation.
-    ///
-    /// # Example
-    ///
-    /// ```rust,no_run
-    /// use std::time::Duration;
-    /// use dioxus::prelude::*;
-    /// use kinetoxus::prelude::*;
-    ///
-    /// fn example(motion: &Motion, signal: Signal<f32>) {
-    ///     // Animate from 0.0 opacity to current signal opacity over 400ms
-    ///     motion.from(signal, 0.0, Duration::from_millis(400))
-    ///         .ease(Ease::CubicOut);
-    /// }
-    /// ```
     pub fn from<T: Interpolate + 'static>(
         &self,
-        target: impl Into<SignalTarget<T>>,
+        target: impl IntoAnimationTarget<T>,
         from: T,
         duration: Duration,
     ) -> MotionHandle {
-        let target = target.into();
-        let mut tween = Tween::from(target, from.clone(), duration);
-        // Latch destination from current target state before setting start value
+        let target = target.into_target();
+        let mut tween = Tween::from(target.clone(), from.clone(), duration);
         tween.ensure_initialized();
-        // Set target immediately to start value to avoid a one-frame flicker
-        target.set(from);
+        target.write_value(from);
         self.start_animation(target, tween)
     }
 
     /// Animates `target` using a pre-configured [`Tween<T>`].
-    ///
-    /// This allows reusing any tween constructed via `kinetocore`'s fluent builder.
     pub fn animate<T: Interpolate + 'static>(
         &self,
-        target: impl Into<SignalTarget<T>>,
+        target: impl IntoAnimationTarget<T>,
         tween: Tween<T>,
     ) -> MotionHandle {
-        let target = target.into();
+        let target = target.into_target();
         self.start_animation(target, tween)
     }
 
-    fn start_animation<T: Interpolate + 'static>(
+    fn start_animation<Target, T>(
         &self,
-        target: SignalTarget<T>,
+        target: Target,
         tween: Tween<T>,
-    ) -> MotionHandle {
+    ) -> MotionHandle
+    where
+        Target: AnimationTarget<T>,
+        T: Interpolate + 'static,
+    {
         let mut inner = self.inner.borrow_mut();
-        // Cancel any previous animation on the same target
         inner.cancel_for_target(&target);
 
         let id = inner.next_id();
-        let anim = SignalAnimation::new(target, tween);
+        let anim = TweenAnimation::new(target, tween);
         inner.animations.insert(id, Box::new(anim));
 
-        // Ensure frame driver is actively ticking
         self.driver.ensure_running(&self.inner);
 
         MotionHandle {
@@ -288,9 +224,9 @@ impl Motion {
         }
     }
 
-    /// Cancels any active animation targeting the given signal.
-    pub fn cancel_target<T: 'static>(&self, target: impl Into<SignalTarget<T>>) {
-        let target = target.into();
+    /// Cancels any active animation targeting the given target.
+    pub fn cancel_target<T: 'static>(&self, target: impl IntoAnimationTarget<T>) {
+        let target = target.into_target();
         self.inner.borrow_mut().cancel_for_target(&target);
         if self.inner.borrow().active_count() == 0 {
             self.driver.stop();
@@ -304,13 +240,6 @@ impl Motion {
     }
 
     /// Steps all active animations forward by `dt`.
-    ///
-    /// Returns `true` if there are still active animations remaining.
-    ///
-    /// In non-WASM / headless environments or unit tests, this is the primary
-    /// mechanism for advancing animations forward in time through the shared
-    /// `oxidase::frame::tick(dt)` manual/headless frame registry. On Web (WASM),
-    /// animations are automatically advanced by the hosted frame loop.
     pub fn tick(&self, dt: Duration) -> bool {
         #[cfg(target_arch = "wasm32")]
         let has_more = self.inner.borrow_mut().tick(dt);

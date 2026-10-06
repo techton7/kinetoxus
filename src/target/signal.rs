@@ -100,6 +100,42 @@ impl<T: Clone + 'static> IntoTargetSampler<T> for SignalTarget<T> {
     }
 }
 
+impl<T: Clone + 'static> crate::target::AnimationTarget<T> for SignalTarget<T> {
+    #[inline]
+    fn write_value(&self, value: T) {
+        self.set(value);
+    }
+
+    #[inline]
+    fn is_target_equal(&self, other: &dyn std::any::Any) -> bool {
+        if let Some(other_target) = other.downcast_ref::<SignalTarget<T>>() {
+            return self == other_target;
+        }
+        if let Some(other_signal) = other.downcast_ref::<Signal<T>>() {
+            return self.signal == *other_signal;
+        }
+        false
+    }
+}
+
+impl<T: Clone + 'static> crate::target::IntoAnimationTarget<T> for SignalTarget<T> {
+    type Target = SignalTarget<T>;
+
+    #[inline]
+    fn into_target(self) -> Self::Target {
+        self
+    }
+}
+
+impl<T: Clone + 'static> crate::target::IntoAnimationTarget<T> for Signal<T> {
+    type Target = SignalTarget<T>;
+
+    #[inline]
+    fn into_target(self) -> Self::Target {
+        SignalTarget::new(self)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -30,6 +30,7 @@ pub mod target;
 pub use driver::DriverKind;
 pub use hooks::use_motion;
 pub use motion::{Motion, MotionHandle};
+pub use target::HandleTarget;
 pub use target::SignalTarget;
 
 // Re-export kinetocore engine and easing for convenience

@@ -3,7 +3,7 @@
 pub use crate::driver::DriverKind;
 pub use crate::hooks::use_motion;
 pub use crate::motion::{Motion, MotionHandle};
-pub use crate::target::SignalTarget;
+pub use crate::target::{AnimationTarget, HandleTarget, IntoAnimationTarget, SignalTarget, Transform2D};
 
 // Re-export core math and tweening primitives from kinetocore
 pub use kinetocore::direction::PlaybackDirection;

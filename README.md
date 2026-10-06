@@ -37,10 +37,11 @@ Built with **zero JavaScript dependencies**, it runs with shared host/runtime fr
 - **Zero JS Dependencies**: Free of browser runtime animation frameworks, Webflow/GSAP licensing constraints, or JavaScript evaluation overhead.
 - **Universal Multi-Platform**: Runs on Web (WASM via high-resolution RAF) and native desktop (deterministic manual stepping for tests, headless, and hosted native VSync drivers).
 
-### 2. Dioxus Reactive Ergonomics (`SignalTarget<T>`)
+### 2. Dual Target Substrate (`SignalTarget<T>` & `HandleTarget<T>`)
 - **`use_motion()` Hook**: Component-scoped motion owner with automatic unmount cancellation and memory leak prevention via `use_drop`.
 - **`SignalTarget<T>`**: Zero-overhead adapter bridging `Tween<T>` interpolation directly to Dioxus reactive signals (`Signal<T>`).
-- **Deterministic Overwrite**: Automatically detects target collisions and cancels prior active animations on the same signal when a new animation is scheduled.
+- **`HandleTarget<T>`**: Non-signal interior-mutable handle adapter (`Transform2D`) enabling high-frequency graphics updates with zero VDOM signal churn.
+- **Deterministic Overwrite**: Automatically detects target collisions and cancels prior active animations on the same target when a new animation is scheduled.
 
 ### 3. Shared Frame Driver Architecture (`oxidase::frame`)
 - **Web (`wasm32`)**: High-resolution browser `requestAnimationFrame` driven by `oxidase::frame`.
@@ -96,8 +97,8 @@ pub fn AnimatedButton() -> Element {
 - [x] **Phase-1 (Dioxus Signal MVP)**: `use_motion()`, `motion.set()`, `motion.from_to()`, `SignalTarget<T>`, and Web RAF driver.
 - [x] **Phase-2 (Current-Value Tweens)**: `to()`, `from()`, dynamic start-value sampling, and lazy endpoint initialization.
 - [x] **Phase-4 (Consumer Dogfooding & Dual-Target Proof)**: Empirical runtime proof on Web (`ego-browser`) and Native (`blitz-host`) via `interactive_showcase.rs`.
-- [ ] **Phase-5 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
-- [ ] **Phase-6 (Non-Signal Target Adapters)**: `HandleTarget<T>` and direct buffer-writing adapters for `trioxus` (WGPU 3D) and `nodoxus` (2D node graph).
+- [x] **Phase-5 (Non-Signal Target Substrate)**: `HandleTarget<T>` and zero-signal memory progression proof on `Transform2D`.
+- [ ] **Phase-6 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
 
 ---
 
