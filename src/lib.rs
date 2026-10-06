@@ -28,8 +28,8 @@ pub mod target;
 
 // Re-export primary public types at crate root
 pub use driver::DriverKind;
-pub use hooks::use_motion;
-pub use motion::{Motion, MotionHandle};
+pub use hooks::{use_motion, use_spring};
+pub use motion::{Motion, MotionHandle, SpringHandle};
 pub use target::HandleTarget;
 pub use target::SignalTarget;
 

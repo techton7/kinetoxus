@@ -10,7 +10,7 @@ use std::any::Any;
 use kinetocore::target::{IntoTargetSampler, Target};
 
 /// Trait representing an animation target that can receive written values and be sampled.
-pub trait AnimationTarget<T>: Target<T> + IntoTargetSampler<T> + Clone + 'static {
+pub trait AnimationTarget<T>: Target<T> + IntoTargetSampler<T> + IntoAnimationTarget<T, Target = Self> + Clone + 'static {
     /// Writes an interpolated value to the target.
     fn write_value(&self, value: T);
     /// Checks if this target equals another target (downcasted via `Any`).

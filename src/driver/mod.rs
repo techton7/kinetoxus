@@ -49,9 +49,12 @@ impl Driver {
         }
 
         let weak_inner = Rc::downgrade(motion_inner);
-        let state = self.state.clone();
+        let weak_state = Rc::downgrade(&self.state);
 
         match start_frame_loop(move |info: FrameInfo| {
+            let Some(state) = weak_state.upgrade() else {
+                return;
+            };
             let Some(inner) = weak_inner.upgrade() else {
                 state.running.set(false);
                 let _ = state.guard.borrow_mut().take();

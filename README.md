@@ -98,7 +98,8 @@ pub fn AnimatedButton() -> Element {
 - [x] **Phase-2 (Current-Value Tweens)**: `to()`, `from()`, dynamic start-value sampling, and lazy endpoint initialization.
 - [x] **Phase-4 (Consumer Dogfooding & Dual-Target Proof)**: Empirical runtime proof on Web (`ego-browser`) and Native (`blitz-host`) via `interactive_showcase.rs`.
 - [x] **Phase-5 (Non-Signal Target Substrate)**: `HandleTarget<T>` and zero-signal memory progression proof on `Transform2D`.
-- [ ] **Phase-6 (Timelines & Spring Physics)**: `use_timeline()`, multi-track sequencing, and damped harmonic oscillator springs (`use_spring()`).
+- [x] **Phase-6 (Analytical Spring Physics & Target Binding)**: Damped harmonic oscillator springs (`use_spring()`, `Motion::spring`), analytical closed-form sampling, $C^1$ velocity-preserving retargeting, exact settle clamping, and dual-target proof across `SignalTarget<f64>` and `HandleTarget<f64>` on Web (`ego-browser`) and Native (`blitz-host`).
+- [ ] **Phase-7 (Timelines & Multi-Track Sequencing)**: `use_timeline()`, multi-track sequencing, and keyframe choreographies.
 
 ---
 

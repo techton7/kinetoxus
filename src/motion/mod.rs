@@ -2,6 +2,7 @@
 
 pub mod animation;
 pub mod handle;
+pub mod spring_handle;
 
 use std::any::Any;
 use std::cell::RefCell;
@@ -10,13 +11,16 @@ use std::rc::Rc;
 use std::time::Duration;
 
 use kinetocore::interpolate::Interpolate;
+use kinetocore::spring::SpringConfig;
+use kinetocore::target::Target;
 use kinetocore::tween::Tween;
 #[cfg(not(target_arch = "wasm32"))]
 use oxidase::frame::tick as tick_shared_frame;
 
 use crate::driver::{Driver, DriverKind};
-use crate::motion::animation::{ActiveAnimation, TweenAnimation};
+use crate::motion::animation::{ActiveAnimation, SpringAnimation, TweenAnimation};
 pub use crate::motion::handle::MotionHandle;
+pub use crate::motion::spring_handle::SpringHandle;
 use crate::target::{AnimationTarget, IntoAnimationTarget};
 
 /// Internal state managing currently running animations.
@@ -59,6 +63,18 @@ impl MotionInner {
         for id in to_remove {
             self.animations.remove(&id);
         }
+    }
+
+    /// Attempts to retarget an active spring animation on the given target identity.
+    pub fn retarget_spring_for_target(&mut self, target: &dyn Any, new_goal: f64) -> Option<u64> {
+        for (id, anim) in &mut self.animations {
+            if anim.is_target_equal(target) {
+                if anim.retarget_spring(new_goal) {
+                    return Some(*id);
+                }
+            }
+        }
+        None
     }
 
     /// Cancels an animation by ID.
@@ -198,6 +214,42 @@ impl Motion {
     ) -> MotionHandle {
         let target = target.into_target();
         self.start_animation(target, tween)
+    }
+
+    /// Animates `target` towards `goal` using an analytical spring governed by `config`.
+    ///
+    /// If an active spring animation is already running on this target, it is seamlessly
+    /// retargeted mid-flight, preserving instantaneous position and velocity ($C^1$ continuity).
+    pub fn spring(
+        &self,
+        target: impl IntoAnimationTarget<f64>,
+        goal: f64,
+        config: SpringConfig,
+    ) -> SpringHandle {
+        let target = target.into_target();
+        let mut inner = self.inner.borrow_mut();
+
+        if let Some(id) = inner.retarget_spring_for_target(&target, goal) {
+            self.driver.ensure_running(&self.inner);
+            return SpringHandle::new(id, Rc::downgrade(&self.inner), self.driver.clone());
+        }
+
+        inner.cancel_for_target(&target);
+
+        let initial = target.sample();
+        let spring = kinetocore::spring::Spring::new(config, initial, goal, 0.0)
+            .unwrap_or_else(|_| {
+                kinetocore::spring::Spring::new(SpringConfig::DEFAULT, initial, goal, 0.0)
+                    .expect("Default spring config is always valid")
+            });
+
+        let id = inner.next_id();
+        let anim = SpringAnimation::new(target, spring);
+        inner.animations.insert(id, Box::new(anim));
+
+        self.driver.ensure_running(&self.inner);
+
+        SpringHandle::new(id, Rc::downgrade(&self.inner), self.driver.clone())
     }
 
     fn start_animation<Target, T>(
