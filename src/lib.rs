@@ -28,8 +28,11 @@ pub mod target;
 
 // Re-export primary public types at crate root
 pub use driver::DriverKind;
-pub use hooks::{use_motion, use_spring};
-pub use motion::{Motion, MotionHandle, SpringHandle};
+pub use hooks::{use_motion, use_spring, use_timeline};
+pub use motion::{
+    Motion, MotionHandle, SpringHandle, TargetBinding, TimelineController, TimelineHookBuilder,
+    TypedTargetBinding,
+};
 pub use target::HandleTarget;
 pub use target::SignalTarget;
 
@@ -41,6 +44,10 @@ pub use kinetocore::interpolate::{lerp, Interpolate};
 pub use kinetocore::repeat::{RepeatCount, RepeatStrategy};
 pub use kinetocore::state::TweenEndpoints;
 pub use kinetocore::target::{IntoTargetSampler, Target, TargetSampler};
+pub use kinetocore::timeline::{
+    CompiledTimeline, Keyframe, OffsetSign, Position, SignedDuration, Timeline, TimelineBuilder,
+    TimelineError, TrackBuilder,
+};
 pub use kinetocore::tween::Tween;
 
 /// Current package version of kinetoxus.

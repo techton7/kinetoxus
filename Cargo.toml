@@ -37,3 +37,6 @@ blitz-paint = { git = "https://github.com/techton7/blitz.git", tag = "techton-ma
 dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.0" }
 wgpu_context = { git = "https://github.com/techton7/anyrender", tag = "wgpu_context-v0.9.1-win-policy" }
 
+[patch."https://github.com/techton7/kinetocore.git"]
+kinetocore = { path = "../kinetocore" }
+

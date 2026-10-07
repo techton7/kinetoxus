@@ -3,6 +3,7 @@
 pub mod animation;
 pub mod handle;
 pub mod spring_handle;
+pub mod timeline_controller;
 
 use std::any::Any;
 use std::cell::RefCell;
@@ -21,6 +22,9 @@ use crate::driver::{Driver, DriverKind};
 use crate::motion::animation::{ActiveAnimation, SpringAnimation, TweenAnimation};
 pub use crate::motion::handle::MotionHandle;
 pub use crate::motion::spring_handle::SpringHandle;
+pub use crate::motion::timeline_controller::{
+    TargetBinding, TimelineController, TimelineHookBuilder, TypedTargetBinding,
+};
 use crate::target::{AnimationTarget, IntoAnimationTarget};
 
 /// Internal state managing currently running animations.
@@ -68,10 +72,8 @@ impl MotionInner {
     /// Attempts to retarget an active spring animation on the given target identity.
     pub fn retarget_spring_for_target(&mut self, target: &dyn Any, new_goal: f64) -> Option<u64> {
         for (id, anim) in &mut self.animations {
-            if anim.is_target_equal(target) {
-                if anim.retarget_spring(new_goal) {
-                    return Some(*id);
-                }
+            if anim.is_target_equal(target) && anim.retarget_spring(new_goal) {
+                return Some(*id);
             }
         }
         None

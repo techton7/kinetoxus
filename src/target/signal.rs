@@ -85,6 +85,20 @@ impl<T: 'static> From<Signal<T>> for SignalTarget<T> {
     }
 }
 
+impl<T: 'static> From<&Signal<T>> for SignalTarget<T> {
+    #[inline]
+    fn from(signal: &Signal<T>) -> Self {
+        Self::new(*signal)
+    }
+}
+
+impl<T: 'static> From<&SignalTarget<T>> for SignalTarget<T> {
+    #[inline]
+    fn from(target: &SignalTarget<T>) -> Self {
+        *target
+    }
+}
+
 impl<T: Clone + 'static> Target<T> for SignalTarget<T> {
     #[inline]
     fn sample(&self) -> T {
@@ -127,12 +141,30 @@ impl<T: Clone + 'static> crate::target::IntoAnimationTarget<T> for SignalTarget<
     }
 }
 
+impl<T: Clone + 'static> crate::target::IntoAnimationTarget<T> for &SignalTarget<T> {
+    type Target = SignalTarget<T>;
+
+    #[inline]
+    fn into_target(self) -> Self::Target {
+        *self
+    }
+}
+
 impl<T: Clone + 'static> crate::target::IntoAnimationTarget<T> for Signal<T> {
     type Target = SignalTarget<T>;
 
     #[inline]
     fn into_target(self) -> Self::Target {
         SignalTarget::new(self)
+    }
+}
+
+impl<T: Clone + 'static> crate::target::IntoAnimationTarget<T> for &Signal<T> {
+    type Target = SignalTarget<T>;
+
+    #[inline]
+    fn into_target(self) -> Self::Target {
+        SignalTarget::new(*self)
     }
 }
 

@@ -71,6 +71,20 @@ impl<T: 'static> From<Rc<RefCell<T>>> for HandleTarget<T> {
     }
 }
 
+impl<T: 'static> From<&Rc<RefCell<T>>> for HandleTarget<T> {
+    #[inline]
+    fn from(handle: &Rc<RefCell<T>>) -> Self {
+        Self::new(handle.clone())
+    }
+}
+
+impl<T: 'static> From<&HandleTarget<T>> for HandleTarget<T> {
+    #[inline]
+    fn from(handle: &HandleTarget<T>) -> Self {
+        handle.clone()
+    }
+}
+
 impl<T: Clone + 'static> Target<T> for HandleTarget<T> {
     #[inline]
     fn sample(&self) -> T {
