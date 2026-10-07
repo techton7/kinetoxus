@@ -48,8 +48,8 @@ fn test_handle_timeline_track_builder_ergonomics() {
 
     let mut builder = TimelineHookBuilder::new();
     builder.track("x", &handle_target, 0.0f64, |t| {
-        t.tween(0.0, 50.0, Duration::from_millis(200), Ease::Linear, Position::End)
-            .tween(50.0, 100.0, Duration::from_millis(200), Ease::Linear, Position::RecentEnd);
+        t.tween(50.0, Duration::from_millis(200), Ease::Linear)
+            .tween(100.0, Duration::from_millis(200), Ease::Linear);
     });
 
     let tl = builder.build().expect("timeline should compile");

@@ -67,7 +67,7 @@ fn test_scrubber_rapid_bidirectional_sweep_without_frame_drift() {
 
         let tl = use_timeline(|b| {
             b.track("pos", pos, 0.0f64, |t| {
-                t.tween(0.0, 1000.0, Duration::from_millis(2000), Ease::Linear, Position::End);
+                t.tween(1000.0, Duration::from_millis(2000), Ease::Linear);
             });
         });
 

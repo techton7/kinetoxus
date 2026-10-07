@@ -24,10 +24,10 @@ use crate::motion::{TimelineController, TimelineHookBuilder};
 ///
 ///     let timeline = use_timeline(|b| {
 ///         b.track("x", &x, 0.0, |t| {
-///             t.tween(0.0, 100.0, Duration::from_millis(500), Ease::QuadInOut, Position::End);
+///             t.tween(100.0, Duration::from_millis(500), Ease::QuadInOut);
 ///         });
 ///         b.track("opacity", &opacity, 0.0, |t| {
-///             t.tween(0.0, 1.0, Duration::from_millis(300), Ease::Linear, Position::End);
+///             t.tween(1.0, Duration::from_millis(300), Ease::Linear);
 ///         });
 ///     });
 ///

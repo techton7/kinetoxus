@@ -13,10 +13,10 @@ fn test_signal_timeline_immediate_initial_value() {
 
         let tl = use_timeline(|b| {
             b.track("x", x, 0.0f64, |t| {
-                t.tween(0.0, 100.0, Duration::from_millis(500), Ease::Linear, Position::End);
+                t.tween(100.0, Duration::from_millis(500), Ease::Linear);
             });
             b.track("y", y, 10.0f64, |t| {
-                t.tween(10.0, 50.0, Duration::from_millis(500), Ease::Linear, Position::End);
+                t.tween(50.0, Duration::from_millis(500), Ease::Linear);
             });
         });
 
@@ -89,10 +89,10 @@ fn test_signal_timeline_seek_and_set_progress() {
 
         let tl = use_timeline(|b| {
             b.track("x", x, 0.0f64, |t| {
-                t.tween(0.0, 200.0, Duration::from_millis(1000), Ease::Linear, Position::End);
+                t.tween(200.0, Duration::from_millis(1000), Ease::Linear);
             });
             b.track("opacity", opacity, 0.0f32, |t| {
-                t.tween(0.0, 1.0, Duration::from_millis(1000), Ease::Linear, Position::End);
+                t.tween(1.0, Duration::from_millis(1000), Ease::Linear);
             });
         });
 
