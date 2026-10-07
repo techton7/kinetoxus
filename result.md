@@ -113,3 +113,40 @@ Traced directly to `packages/blitz-paint/src/render/background.rs`:
 - **Upstream Engine Fix (Blitz)**:
   In `blitz-paint/src/render/background.rs`, when `clip_is_outer` is true solely due to `background-clip: border-box` extending beyond `background-origin: padding-box`, clamp or extend brush bounds to the clip rectangle rather than incrementing $\text{count} = 2$.
 
+---
+
+## 6. Milestone T-7: Dogfooding Updated Blitz via Local Path Dependencies
+
+### 6.1 Local Path Source Resolution Proof
+`Cargo.toml` in `kinetoxus` was configured with local path overrides pointing directly to `../../blitz/packages/*`. Active resolution was confirmed via `cargo tree`:
+- `blitz-shell` -> `/Volumes/HDD-1T-2021-Mac/Vault/business/project/mine/dioxus/blitz/packages/blitz-shell`
+- `blitz-dom` -> `/Volumes/HDD-1T-2021-Mac/Vault/business/project/mine/dioxus/blitz/packages/blitz-dom`
+- `blitz-traits` -> `/Volumes/HDD-1T-2021-Mac/Vault/business/project/mine/dioxus/blitz/packages/blitz-traits`
+- `blitz-paint` -> `/Volumes/HDD-1T-2021-Mac/Vault/business/project/mine/dioxus/blitz/packages/blitz-paint`
+- `dioxus-native` -> `/Volumes/HDD-1T-2021-Mac/Vault/business/project/mine/dioxus/blitz/packages/dioxus-native`
+
+### 6.2 Native Dogfooding Test Matrix Execution (40/40 Passing)
+- **Unit & Integration Tests (`cargo test --features native`)**:
+  - `src/lib.rs`: 6/6 tests passed.
+  - `tests/handle_proof_test.rs`: 3/3 tests passed.
+  - `tests/phase1_signal_mvp.rs`: 9/9 tests passed.
+  - `tests/phase2_to_from.rs`: 5/5 tests passed.
+  - `tests/phase3_handle_target.rs`: 6/6 tests passed.
+  - `tests/phase4_handle_spring.rs`: 4/4 tests passed.
+  - `tests/phase4_signal_spring.rs`: 4/4 tests passed.
+  - Doc-tests: 3/3 passed.
+  - Total: **40 / 40 tests passing with zero regressions**.
+- **Native Binaries Built & Executed**:
+  - `spring_showcase`: Built successfully under `--features native` and launched cleanly.
+  - `bisect_card`: Built successfully under `--features native` and verified.
+
+### 6.3 External Ecosystem Boundary Notice
+- Upstream Blitz upgraded `anyrender` to `0.14.0` and `stylo` to `0.22.0`.
+- The external test control bridge `blitz-host-bridge v0.1.4` relies on `anyrender 0.13.0`.
+- When testing via the core runtime (`--features native`), all packages integrate seamlessly. To use out-of-process control (`--features blitz-host`), `blitz-host-bridge` will need to be aligned to `anyrender 0.14.0`.
+
+### 6.4 Hard Stop Boundary Enforced
+- Zero git commit, push, or tag operations were performed in `../blitz` or `kinetoxus`.
+- Awaiting user decision before proceeding with any release lifecycle steps.
+
+
