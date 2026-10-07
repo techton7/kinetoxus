@@ -32,31 +32,31 @@ fn App() -> Element {
         b.add_label("accent", Duration::from_millis(1000));
         b.add_label("outro", Duration::from_millis(2000));
 
-        b.track("x", &x, 0.0, |t| {
+        b.track("x", x, 0.0, |t| {
             t.tween(140.0, Duration::from_millis(1000), Ease::CubicInOut)
                 .tween(-140.0, Duration::from_millis(1000), Ease::CubicInOut)
                 .tween(0.0, Duration::from_millis(500), Ease::CubicOut);
         });
 
-        b.track("y", &y, 0.0, |t| {
+        b.track("y", y, 0.0, |t| {
             t.tween(-50.0, Duration::from_millis(1000), Ease::QuadInOut)
                 .tween(50.0, Duration::from_millis(1000), Ease::QuadInOut)
                 .tween(0.0, Duration::from_millis(500), Ease::QuadOut);
         });
 
-        b.track("scale", &scale, 1.0, |t| {
+        b.track("scale", scale, 1.0, |t| {
             t.tween(1.25, Duration::from_millis(1000), Ease::BackOut)
                 .tween(0.85, Duration::from_millis(1000), Ease::CubicInOut)
                 .tween(1.0, Duration::from_millis(500), Ease::QuadOut);
         });
 
-        b.track("opacity", &opacity, 1.0, |t| {
+        b.track("opacity", opacity, 1.0, |t| {
             t.tween(0.6, Duration::from_millis(1000), Ease::Linear)
                 .tween(0.9, Duration::from_millis(1000), Ease::Linear)
                 .tween(1.0, Duration::from_millis(500), Ease::Linear);
         });
 
-        b.track("rotation", &rotation, 0.0, |t| {
+        b.track("rotation", rotation, 0.0, |t| {
             t.tween(15.0, Duration::from_millis(1000), Ease::SineInOut)
                 .tween(-15.0, Duration::from_millis(1000), Ease::SineInOut)
                 .tween(0.0, Duration::from_millis(500), Ease::SineOut);
