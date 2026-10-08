@@ -118,7 +118,7 @@ fn App() -> Element {
                 div {
                     class: "flex items-center gap-3",
                     div {
-                        class: "w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-xl font-bold",
+                        class: "w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-xl font-bold bg-no-repeat",
                         "K"
                     }
                     div {

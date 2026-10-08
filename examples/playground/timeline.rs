@@ -98,7 +98,7 @@ pub fn TimelineSection() -> Element {
 
                 div {
                     id: "animated-card",
-                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white",
+                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white bg-no-repeat",
                     style: "transform: translate({x()}px, {y()}px) scale({scale()}) rotate({rotation()}deg); opacity: {opacity()}; transition: none;",
                     span { class: "font-bold text-lg", "Timeline Target" }
                     span { class: "text-xs opacity-80 font-mono", "kinetocore::timeline" }

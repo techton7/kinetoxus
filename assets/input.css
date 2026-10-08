@@ -1,1 +1,6 @@
-@import "tailwindcss"; @source "../examples";
+@import "tailwindcss";
+@source "../examples";
+
+[class*="bg-gradient-"] {
+    background-repeat: no-repeat;
+}

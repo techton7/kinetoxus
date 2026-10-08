@@ -39,7 +39,7 @@ pub fn TweensSection() -> Element {
                 class: "w-full h-72 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-center relative overflow-hidden shadow-inner",
 
                 div {
-                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white",
+                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white bg-no-repeat",
                     style: "transform: translate({x()}px, {y()}px) scale({scale()}) rotate({rot()}deg); opacity: {opacity()}; transition: none;",
                     span { class: "font-bold text-lg", "Tween Target" }
                     span { class: "text-xs opacity-80 font-mono", "Comprehensive Easings" }

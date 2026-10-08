@@ -47,7 +47,7 @@ pub fn HandlesSection() -> Element {
                 class: "w-full h-72 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-center relative overflow-hidden shadow-inner",
 
                 div {
-                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-fuchsia-600 to-indigo-700 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white",
+                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-fuchsia-600 to-indigo-700 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white bg-no-repeat",
                     style: "transform: translate({x_val}px, {y_val}px) scale({scale_val}) rotate({rot_val}deg); transition: none;",
                     span { class: "font-bold text-lg", "Handle Target" }
                     span { class: "text-xs opacity-80 font-mono", "Transform2D Direct Mut" }
