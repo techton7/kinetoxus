@@ -12,7 +12,7 @@ categories = ["gui", "visualization", "multimedia"]
 
 [dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
-kinetocore = { version = "0.2.0", git = "https://github.com/techton7/kinetocore.git", tag = "v0.2.0" }
+kinetocore = "0.2.0"
 oxidase = { git = "https://github.com/techton7/oxidase.git", branch = "main" }
 
 [features]
@@ -36,7 +36,4 @@ blitz-traits = { git = "https://github.com/techton7/blitz.git", tag = "techton-m
 blitz-paint = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.1" }
 dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.1" }
 wgpu_context = { git = "https://github.com/techton7/anyrender", tag = "wgpu_context-v0.9.1-win-policy" }
-
-[patch."https://github.com/techton7/kinetocore.git"]
-kinetocore = { path = "../kinetocore" }
 
