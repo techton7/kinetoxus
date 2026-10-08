@@ -25,6 +25,8 @@ pub fn HandlesSection() -> Element {
     let m_center = motion.clone();
     let m_reset = motion;
 
+    let current_frame = render_count();
+
     let x_val = *transform.x.borrow();
     let y_val = *transform.y.borrow();
     let scale_val = *transform.scale.borrow();
@@ -40,6 +42,7 @@ pub fn HandlesSection() -> Element {
                 span { "y: {y_val:.1}px" }
                 span { "scale: {scale_val:.2}" }
                 span { "rot: {rot_val:.1}°" }
+                span { class: "text-amber-400", "frame: {current_frame}" }
                 span { class: "text-emerald-400 font-semibold", "Direct Memory (0 Signals)" }
             }
 
@@ -60,23 +63,28 @@ pub fn HandlesSection() -> Element {
                 button {
                     class: "px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-md active:scale-95 transition cursor-pointer",
                     onclick: move |_| {
-                        m_pop.to(t_pop.scale.clone(), 1.35f32, Duration::from_millis(400)).ease(Ease::BackOut);
+                        m_pop.from_to(t_pop.scale.clone(), 0.6f32, 1.35f32, Duration::from_millis(400))
+                            .ease(Ease::BackOut);
                     },
                     "💥 Pop Scale"
                 }
                 button {
                     class: "px-4 py-2 text-xs font-semibold rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-md active:scale-95 transition cursor-pointer",
                     onclick: move |_| {
-                        m_slide.from_to(t_slide.x.clone(), -140.0f32, 140.0f32, Duration::from_millis(700)).ease(Ease::CubicInOut);
+                        m_slide.from_to(t_slide.x.clone(), -130.0f32, 130.0f32, Duration::from_millis(700))
+                            .ease(Ease::QuadInOut);
+                        m_slide.from_to(t_slide.rotation.clone(), 0.0f32, 180.0f32, Duration::from_millis(700))
+                            .ease(Ease::QuadInOut);
                     },
-                    "↔ Slide Range"
+                    "↔ Slide & Rotate"
                 }
                 button {
                     class: "px-4 py-2 text-xs font-semibold rounded-xl bg-sky-600 hover:bg-sky-500 text-white shadow-md active:scale-95 transition cursor-pointer",
                     onclick: move |_| {
-                        m_center.to(t_center.x.clone(), 0.0f32, Duration::from_millis(400)).ease(Ease::CubicOut);
-                        m_center.to(t_center.y.clone(), 0.0f32, Duration::from_millis(400)).ease(Ease::CubicOut);
-                        m_center.to(t_center.scale.clone(), 1.0f32, Duration::from_millis(400)).ease(Ease::CubicOut);
+                        m_center.to(t_center.x.clone(), 0.0f32, Duration::from_millis(400)).ease(Ease::QuadOut);
+                        m_center.to(t_center.y.clone(), 0.0f32, Duration::from_millis(400)).ease(Ease::QuadOut);
+                        m_center.to(t_center.scale.clone(), 1.0f32, Duration::from_millis(400)).ease(Ease::QuadOut);
+                        m_center.to(t_center.rotation.clone(), 0.0f32, Duration::from_millis(400)).ease(Ease::QuadOut);
                     },
                     "🎯 To Center"
                 }
@@ -87,6 +95,7 @@ pub fn HandlesSection() -> Element {
                         m_reset.set(t_reset.y.clone(), 0.0f32);
                         m_reset.set(t_reset.scale.clone(), 1.0f32);
                         m_reset.set(t_reset.rotation.clone(), 0.0f32);
+                        render_count.set(render_count() + 1);
                     },
                     "↺ Reset"
                 }
