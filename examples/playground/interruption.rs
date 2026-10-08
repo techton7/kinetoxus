@@ -46,7 +46,7 @@ pub fn InterruptionSection() -> Element {
                 class: "w-full h-72 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-center relative overflow-hidden shadow-inner",
 
                 div {
-                    class: "w-52 h-32 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white bg-no-repeat",
+                    class: "w-52 h-32 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 shadow-2xl border border-white/20 bg-no-repeat flex flex-col items-center justify-center select-none text-white",
                     style: "transform: translateX({offset_x()}px) scale({scale()}); transition: none;",
                     span { class: "font-bold text-lg", "Stress Target" }
                     span { class: "text-xs opacity-80 font-mono", "Mid-Flight Retargeting" }

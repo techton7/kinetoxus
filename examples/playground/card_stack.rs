@@ -40,7 +40,7 @@ pub fn CardStackSection() -> Element {
 
                 // Card 0 (Back / Alpha)
                 div {
-                    class: "w-64 h-36 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 shadow-2xl border border-white/10 flex flex-col items-center justify-center absolute text-white bg-no-repeat",
+                    class: "w-64 h-36 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 shadow-2xl border border-white/10 bg-no-repeat flex flex-col items-center justify-center absolute text-white",
                     style: "transform: translateY({c0_y()}px) scale({c0_scale()}); opacity: {c0_opacity()}; z-index: 10; transition: none;",
                     span { class: "font-bold text-base", "Card Alpha" }
                     span { class: "text-xs opacity-75 font-mono", "Background Layer" }
@@ -48,7 +48,7 @@ pub fn CardStackSection() -> Element {
 
                 // Card 1 (Middle / Beta)
                 div {
-                    class: "w-64 h-36 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 shadow-2xl border border-white/10 flex flex-col items-center justify-center absolute text-white bg-no-repeat",
+                    class: "w-64 h-36 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 shadow-2xl border border-white/10 bg-no-repeat flex flex-col items-center justify-center absolute text-white",
                     style: "transform: translateY({c1_y()}px) scale({c1_scale()}); opacity: {c1_opacity()}; z-index: 20; transition: none;",
                     span { class: "font-bold text-base", "Card Beta" }
                     span { class: "text-xs opacity-75 font-mono", "Middle Layer" }
@@ -56,7 +56,7 @@ pub fn CardStackSection() -> Element {
 
                 // Card 2 (Front / Gamma)
                 div {
-                    class: "w-64 h-36 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 shadow-2xl border border-white/20 flex flex-col items-center justify-center absolute text-white bg-no-repeat",
+                    class: "w-64 h-36 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 shadow-2xl border border-white/20 bg-no-repeat flex flex-col items-center justify-center absolute text-white",
                     style: "transform: translateY({c2_y()}px) scale({c2_scale()}); opacity: {c2_opacity()}; z-index: 30; transition: none;",
                     span { class: "font-bold text-base", "Card Gamma" }
                     span { class: "text-xs opacity-75 font-mono", "Foreground Layer" }

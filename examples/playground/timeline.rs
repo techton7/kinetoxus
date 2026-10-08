@@ -76,12 +76,12 @@ pub fn TimelineSection() -> Element {
 
     rsx! {
         div {
-            class: "w-full flex flex-col items-center gap-6",
+            class: "w-full flex flex-col items-center gap-3",
 
             // Telemetry HUD
             div {
                 id: "telemetry-hud",
-                class: "flex flex-wrap items-center justify-center gap-3 sm:gap-4 px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-mono text-sky-400 shadow-lg",
+                class: "flex flex-wrap items-center justify-center gap-3 sm:gap-4 px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-mono text-sky-400 shadow-lg",
                 span { id: "hud-time", "t: {time_sec():.2}s" }
                 span { id: "hud-progress", "progress: {progress():.3}" }
                 span { id: "hud-x", "x: {x():.1}px" }
@@ -94,11 +94,11 @@ pub fn TimelineSection() -> Element {
 
             // Canvas Area
             div {
-                class: "w-full h-72 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-center relative overflow-hidden shadow-inner",
+                class: "w-full h-44 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-center relative overflow-hidden shadow-inner",
 
                 div {
                     id: "animated-card",
-                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white bg-no-repeat",
+                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-2xl border border-white/20 bg-no-repeat flex flex-col items-center justify-center select-none text-white",
                     style: "transform: translate({x()}px, {y()}px) scale({scale()}) rotate({rotation()}deg); opacity: {opacity()}; transition: none;",
                     span { class: "font-bold text-lg", "Timeline Target" }
                     span { class: "text-xs opacity-80 font-mono", "kinetocore::timeline" }

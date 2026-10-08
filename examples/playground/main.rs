@@ -109,21 +109,21 @@ fn App() -> Element {
         style { "{TAILWIND_CSS}" }
 
         div {
-            class: "min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center font-sans selection:bg-indigo-500 selection:text-white p-4 md:p-8 box-border",
+            class: "min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center font-sans selection:bg-indigo-500 selection:text-white p-3 box-border",
 
             // Global Header
             header {
-                class: "w-full max-w-5xl flex flex-col md:flex-row items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-800/80",
+                class: "w-full max-w-5xl flex flex-col md:flex-row items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800/80",
 
                 div {
                     class: "flex items-center gap-3",
                     div {
-                        class: "w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-xl font-bold bg-no-repeat",
+                        class: "w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 bg-no-repeat flex items-center justify-center shadow-lg shadow-indigo-500/20 text-lg font-bold",
                         "K"
                     }
                     div {
                         h1 {
-                            class: "text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight",
+                            class: "text-lg font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight",
                             "Kinetoxus Motion Playground"
                         }
                         p {
@@ -149,7 +149,7 @@ fn App() -> Element {
 
             // Tab Navigation Bar
             nav {
-                class: "w-full max-w-5xl flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-slate-900/90 backdrop-blur rounded-2xl border border-slate-800/80 mb-8 shadow-xl",
+                class: "w-full max-w-5xl flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-slate-900/90 backdrop-blur rounded-2xl border border-slate-800/80 mb-3 shadow-xl",
                 for tab in tabs {
                     {
                         let is_active = current_tab() == tab;

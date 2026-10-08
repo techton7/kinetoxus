@@ -36,7 +36,7 @@ pub fn SpringSection() -> Element {
                 class: "w-full h-72 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-center relative overflow-hidden shadow-inner",
 
                 div {
-                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-2xl border border-white/20 flex flex-col items-center justify-center select-none text-white bg-no-repeat",
+                    class: "w-56 h-36 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-2xl border border-white/20 bg-no-repeat flex flex-col items-center justify-center select-none text-white",
                     style: "transform: translate({x()}px, {y()}px) scale({scale()}); transition: none;",
                     span { class: "font-bold text-lg", "Spring Target" }
                     span { class: "text-xs opacity-80 font-mono", "kinetocore::spring" }
