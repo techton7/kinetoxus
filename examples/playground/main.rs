@@ -25,6 +25,7 @@ use oxidase::prelude::*;
 
 mod card_stack;
 mod diagnostics;
+mod gesture;
 mod handles;
 mod interruption;
 mod spring;
@@ -33,6 +34,7 @@ mod tweens;
 
 use card_stack::CardStackSection;
 use diagnostics::DiagnosticsSection;
+use gesture::GestureSection;
 use handles::HandlesSection;
 use interruption::InterruptionSection;
 use spring::SpringSection;
@@ -50,6 +52,7 @@ fn main() {
 enum Tab {
     Timeline,
     Spring,
+    Gesture,
     CardStack,
     Interruption,
     Handles,
@@ -62,6 +65,7 @@ impl Tab {
         match self {
             Tab::Timeline => "Timeline",
             Tab::Spring => "Spring Physics",
+            Tab::Gesture => "Gesture Physics",
             Tab::CardStack => "Card Stack",
             Tab::Interruption => "Interruption Lab",
             Tab::Handles => "Zero-Signal Handles",
@@ -74,11 +78,25 @@ impl Tab {
         match self {
             Tab::Timeline => "⏱️",
             Tab::Spring => "🌀",
+            Tab::Gesture => "👆",
             Tab::CardStack => "🗂️",
             Tab::Interruption => "⚡",
             Tab::Handles => "🎯",
-            Tab::Tweens => "🎨",
-            Tab::Diagnostics => "🔍",
+            Tab::Tweens => "✨",
+            Tab::Diagnostics => "🔬",
+        }
+    }
+
+    fn id(&self) -> &'static str {
+        match self {
+            Tab::Timeline => "tab-timeline",
+            Tab::Spring => "tab-spring",
+            Tab::Gesture => "tab-gesture",
+            Tab::CardStack => "tab-card-stack",
+            Tab::Interruption => "tab-interruption",
+            Tab::Handles => "tab-handles",
+            Tab::Tweens => "tab-tweens",
+            Tab::Diagnostics => "tab-diagnostics",
         }
     }
 }
@@ -87,17 +105,23 @@ impl Tab {
 fn App() -> Element {
     let mut current_tab = use_signal(|| Tab::Timeline);
     let mut fps = use_signal(|| 60.0f64);
+    let last_fps_update = use_hook(|| std::cell::Cell::new(0.0f64));
 
     use_frame(move |info| {
-        let dt = info.delta.as_secs_f64();
-        if dt > 0.001 {
-            fps.set(1.0 / dt);
+        let now_s = info.now.as_secs_f64();
+        if now_s - last_fps_update.get() >= 0.5 {
+            last_fps_update.set(now_s);
+            let dt = info.delta.as_secs_f64();
+            if dt > 0.001 {
+                fps.set(1.0 / dt);
+            }
         }
     });
 
     let tabs = [
         Tab::Timeline,
         Tab::Spring,
+        Tab::Gesture,
         Tab::CardStack,
         Tab::Interruption,
         Tab::Handles,
@@ -160,6 +184,7 @@ fn App() -> Element {
                         };
                         rsx! {
                             button {
+                                id: "{tab.id()}",
                                 key: "{tab.label()}",
                                 class: "px-3.5 py-2 rounded-xl text-xs sm:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer {active_class}",
                                 onclick: move |_| current_tab.set(tab),
@@ -178,6 +203,7 @@ fn App() -> Element {
                 match current_tab() {
                     Tab::Timeline => rsx! { TimelineSection {} },
                     Tab::Spring => rsx! { SpringSection {} },
+                    Tab::Gesture => rsx! { GestureSection {} },
                     Tab::CardStack => rsx! { CardStackSection {} },
                     Tab::Interruption => rsx! { InterruptionSection {} },
                     Tab::Handles => rsx! { HandlesSection {} },

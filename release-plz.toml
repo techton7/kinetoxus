@@ -1,5 +1,10 @@
 [workspace]
-pr_labels = ["release"]
-allow_dirty = false
+publish = false
+
+[[package]]
+name = "kinetoxus"
+publish = false
+git_only = true
+git_tag_enable = false
+git_release_enable = false
 changelog_update = true
-semver_check = false

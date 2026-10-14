@@ -23,7 +23,8 @@ use crate::motion::animation::{ActiveAnimation, SpringAnimation, TweenAnimation}
 pub use crate::motion::handle::MotionHandle;
 pub use crate::motion::spring_handle::SpringHandle;
 pub use crate::motion::timeline_controller::{
-    TargetBinding, TimelineController, TimelineHookBuilder, TypedTargetBinding,
+    SubTimelineHookBuilder, TargetBinding, TimelineController, TimelineHookBuilder,
+    TypedTargetBinding,
 };
 use crate::target::{AnimationTarget, IntoAnimationTarget};
 

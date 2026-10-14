@@ -1,6 +1,6 @@
 [package]
 name = "kinetoxus"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/techton7/kinetoxus"
@@ -12,29 +12,24 @@ categories = ["gui", "visualization", "multimedia"]
 
 [dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
-kinetocore = "0.2.0"
-oxidase = { git = "https://github.com/techton7/oxidase.git", branch = "main" }
+kinetocore = "0.3.0"
+oxidase = { git = "https://github.com/techton7/oxidase.git", tag = "oxidase-v0.1.11" }
 
 [features]
 default = []
 native = ["oxidase/native"]
-blitz-host = ["oxidase/blitz-host"]
+blitz-host = ["native", "oxidase/blitz-host"]
 
 [dev-dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["minimal"] }
+web-time = "1.1"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
-dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.2" }
+dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.3" }
 
 [profile.dev.package."*"]
 opt-level = 3
 
-[patch.crates-io]
-blitz-shell = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.2" }
-blitz-dom = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.2" }
-blitz-traits = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.2" }
-blitz-paint = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.2" }
-dioxus-native = { git = "https://github.com/techton7/blitz.git", tag = "techton-main-v0.2.2" }
-wgpu_context = { git = "https://github.com/techton7/anyrender", tag = "wgpu_context-v0.9.1-win-policy" }
+
 
 

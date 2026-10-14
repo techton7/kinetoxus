@@ -21,6 +21,7 @@
 #![warn(missing_docs)]
 
 pub mod driver;
+pub mod gesture;
 pub mod hooks;
 pub mod motion;
 pub mod prelude;
@@ -28,7 +29,11 @@ pub mod target;
 
 // Re-export primary public types at crate root
 pub use driver::DriverKind;
-pub use hooks::{use_motion, use_spring, use_timeline};
+pub use gesture::{
+    GestureContinuationConfig, GestureContinuationController, GesturePhase, GestureTracker,
+    TrackerConfig, VelocityWeighting,
+};
+pub use hooks::{use_gesture_continuation, use_motion, use_spring, use_timeline};
 pub use motion::{
     Motion, MotionHandle, SpringHandle, TargetBinding, TimelineController, TimelineHookBuilder,
     TypedTargetBinding,
@@ -41,12 +46,17 @@ pub use kinetocore as core;
 pub use kinetocore::ease::Ease;
 pub use kinetocore::easing;
 pub use kinetocore::interpolate::{lerp, Interpolate};
+pub use kinetocore::physics;
+pub use kinetocore::physics::{
+    apply_overdrag, BoundaryPolicy as PhysicsBoundaryPolicy, InertiaConfig, InertiaContinuation,
+    KinematicSampleBuffer, SnapPolicy,
+};
 pub use kinetocore::repeat::{RepeatCount, RepeatStrategy};
 pub use kinetocore::state::TweenEndpoints;
 pub use kinetocore::target::{IntoTargetSampler, Target, TargetSampler};
 pub use kinetocore::timeline::{
-    CompiledTimeline, Keyframe, OffsetSign, Position, SignedDuration, Timeline, TimelineBuilder,
-    TimelineError, TrackBuilder,
+    BoundaryPolicy, CompiledTimeline, Keyframe, OffsetSign, Position, SignedDuration, Timeline,
+    TimelineBuilder, TimelineError, TrackBoundaryPolicy, TrackBuilder,
 };
 pub use kinetocore::tween::Tween;
 
