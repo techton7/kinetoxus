@@ -13,7 +13,7 @@ categories = ["gui", "visualization", "multimedia"]
 [dependencies]
 dioxus = { version = "0.7.0", default-features = false, features = ["hooks", "signals", "macro", "html"] }
 kinetocore = "0.3.0"
-oxidase = { git = "https://github.com/techton7/oxidase.git", tag = "oxidase-v0.1.11" }
+oxidase = { git = "https://github.com/techton7/oxidase.git", tag = "oxidase-v0.2.1" }
 
 [features]
 default = []
